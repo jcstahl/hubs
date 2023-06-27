@@ -74,7 +74,7 @@ function grabberPressedSnapAction(world, camera) {
 
 function spawnCameraFile(cameraObj, file, type) {
   const opts = type === "video" ? { videoPaused: true } : {};
-  const { entity } = addMedia(file, "#interactable-media", undefined, `${type}-camera`, false, false, true, opts);
+  const { entity } = addMedia(file, "notNote", "#interactable-media", undefined, `${type}-camera`, false, false, true, opts);
   entity.addEventListener(
     "media_resolved",
     () => {

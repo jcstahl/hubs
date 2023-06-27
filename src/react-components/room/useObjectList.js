@@ -1,6 +1,6 @@
 import React, { useState, useEffect, useContext, createContext, useCallback, Children, cloneElement } from "react";
 import PropTypes from "prop-types";
-import { mediaSort, getMediaType } from "../../utils/media-sorting.js";
+import { mediaSort, getMediaType, getIsNote, getMessage, getCategory, getTitle, getColor } from "../../utils/media-sorting.js"; //moonfactory編集
 
 function getDisplayString(el) {
   // Having a listed-media component does not guarantee the existence of a media-loader component,
@@ -80,6 +80,11 @@ export function ObjectListProvider({ scene, children }) {
         id: el.object3D.id,
         name: getDisplayString(el),
         type: getMediaType(el),
+        isNote: getIsNote(el), //moonfactory追加
+        message: getMessage(el), //moonfactory追加
+        category: getCategory(el), //moonfactory追加
+        title: getTitle(el), //moonfactory追加
+        color: getColor(el), //moonfactory追加
         el
       }));
 

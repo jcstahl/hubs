@@ -31,6 +31,7 @@ export class SuperSpawnerSystem {
 
     const spawnedEntity = addMedia(
       data.src,
+      "notNote",
       data.template,
       ObjectContentOrigins.SPAWNER,
       null,

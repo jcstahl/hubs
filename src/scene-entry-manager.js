@@ -11,7 +11,7 @@ const isMobileVR = AFRAME.utils.device.isMobileVR();
 const isDebug = qsTruthy("debug");
 const qs = new URLSearchParams(location.search);
 
-import { addMedia } from "./utils/media-utils";
+import { addMedia, addNote } from "./utils/media-utils"; //moonfactory追加
 import {
   isIn2DInterstitial,
   handleExitTo2DInterstitial,
@@ -215,6 +215,7 @@ export default class SceneEntryManager {
       if (!this.hubChannel.can("spawn_and_move_media")) return;
       const { entity, orientation } = addMedia(
         src,
+		"notNote", //moonfactory追加
         "#interactable-media",
         contentOrigin,
         null,
@@ -232,12 +233,75 @@ export default class SceneEntryManager {
       return entity;
     };
 
+	//moonfactory追加
+    //モニターの生成
+    const spawnScreen = (src, contentOrigin) => {
+      if (!this.hubChannel.can("spawn_and_move_media")) return;
+      const offset = { x: 0, y: 0, z: -1.5 };
+      const { entity, orientation } = addMedia(
+        src,
+        "notNote",
+        "#interactable-media",
+        contentOrigin,
+        null,
+        !(src instanceof MediaStream),
+        true
+      );
+      orientation.then(or => {
+        entity.setAttribute("offset-monitor", {
+          target: "#avatar-pov-node",
+          pos: { x: -4.277050018310547, y: 2.534637451171875, z: -5.291173458099365}, //生成の位置
+          offset: { x: 0, y: 0, z: 0.1},
+          rotation: new THREE.Euler(-0.00015693566725949812, 1.694987102816536, -0.004782314095507789),　//生成の回転
+          orientation: or
+        });
+      });
+
+      return entity;
+    };
+
+    //moonfactory追加
+    //付箋の生成
+    const spawnNote = (src, contentOrigin, data) => {
+      if (!this.hubChannel.can("spawn_and_move_media")) return;
+      const offset = { x: 0, y: 0, z: -1.5 };
+      const { entity, orientation } = addNote(
+        src,
+        "isNote",
+        data.message,
+        data.category,
+        data.title,
+        data.color,
+        "#interactable-media",
+        contentOrigin,
+        null,
+        !(src instanceof MediaStream),
+        true
+      );
+
+      orientation.then(or => {
+        entity.setAttribute("offset-global", {
+          target: "#avatar-pov-node",
+          pos: data.position, //set to spawn position
+          offset: { x: 0, y: 0, z: 0.1},
+          rotation: data.rotation,
+          orientation: or
+        });
+      });
+      
+      return entity;
+    };
+	
     this.scene.addEventListener("add_media", e => {
       const contentOrigin = e.detail instanceof File ? ObjectContentOrigins.FILE : ObjectContentOrigins.URL;
 
       spawnMediaInfrontOfPlayer(e.detail, contentOrigin);
     });
 
+	this.scene.addEventListener("add_note", e => {
+      const contentOrigin = e.detail.file instanceof File ? ObjectContentOrigins.FILE : ObjectContentOrigins.URL;
+      spawnNote(e.detail.file, contentOrigin, e.detail.data);
+    });
     this.scene.addEventListener("object_spawned", e => {
       this.hubChannel.sendObjectSpawnedEvent(e.detail.objectType);
     });
@@ -335,7 +399,7 @@ export default class SceneEntryManager {
         if (target === "avatar") {
           this.avatarRig.setAttribute("player-info", { isSharingAvatarCamera: true });
         } else {
-          currentVideoShareEntity = spawnMediaInfrontOfPlayer(this.mediaDevicesManager.mediaStream, undefined);
+          currentVideoShareEntity = spawnScreen(this.mediaDevicesManager.mediaStream, undefined); //moonfactory編集
           // Wire up custom removal event which will stop the stream.
           currentVideoShareEntity.setAttribute(
             "emit-scene-event-on-remove",

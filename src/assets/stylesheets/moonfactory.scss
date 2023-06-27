@@ -1,0 +1,1145 @@
+@use "../../react-components/styles/theme.scss";
+@import 'shared.scss';
+
+$fontSize: 16px;
+$semi-bold: 600;
+
+:local(.noteTitle) {
+    color: rgb(60, 60, 60);
+    font-size: .5rem;
+    position: absolute;
+    margin-top: -90px;
+    display: inline-block;
+    vertical-align: top;
+  }
+
+:local(.dropdown) {
+    position: relative;
+    display: flex;
+    align-items: center;
+    line-height: 20px;
+    justify-content: center;
+    padding: 8px 16px;
+    background-color: var(--input-bg-color);
+
+    select {
+        font-size: $fontSize;
+        @extend %rounded-border;
+        @extend %default-font;
+        font-family: theme.$font-family-default;
+        color: theme.$text1-color;
+        appearance: none;
+        background-color: theme.$input-bg-color;
+        -moz-appearance: none;
+        -webkit-appearance: none;
+        border: 1px solid theme.$input-border-color;
+        padding: 12px;
+        font-weight: bold;
+        padding-right: 30px;
+        width: 100%;
+
+        &:disabled,
+        &[disabled] {
+            color: theme.$disabled-text-color;
+        }
+    }
+}
+
+:local(.dropdown-arrow) {
+    pointer-events: none;
+    position: absolute;
+    right: 7.5%;
+
+    &:local(.disabled) {
+        filter: opacity(25%);
+    }
+}
+
+
+:local(.fullscreen-layout) {
+  display: flex;
+  flex-direction: column;
+  pointer-events: all;
+  position: fixed;
+  left: 0;
+  right: 0;
+  top: 0;
+  bottom: 0;
+  background-color: theme.$background1-color;
+  z-index: 10;
+}
+
+:local(.header) {
+  position: relative;
+  height: 50px;
+  border-bottom: 1px solid theme.$border1-color;
+
+  @media(min-width: theme.$breakpoint-lg) and (min-height: theme.$breakpoint-vr) {
+      height: 96px;
+  }
+}
+
+:local(.header-left) {
+  position: absolute;
+  left: 0;
+  top: 0;
+  margin-left: 16px;
+  height: 48px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+
+  @media(min-width: theme.$breakpoint-lg) and (min-height: theme.$breakpoint-vr) {
+      margin-left: 24px;
+      height: 96px;
+  }
+}
+
+:local(.header-center) {
+  margin-top: 48px;
+  border-top: 1px solid theme.$border1-color;
+  width: 100%;
+  height: 96px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+
+  @media(min-width: theme.$breakpoint-lg) and (min-height: theme.$breakpoint-vr) {
+      margin-top: 0;
+      border-top: none;
+  }
+}
+
+:local(.header-right) {
+  position: absolute;
+  right: 0;
+  top: 0;
+  margin-right: 16px;
+  height: 48px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+
+  @media(min-width: theme.$breakpoint-lg) and (min-height: theme.$breakpoint-vr) {
+      margin-right: 24px;
+      height: 96px;
+  }
+}
+
+:local(.content) {
+  display: flex;
+  flex: 1;
+  flex-direction: column;
+  overflow: auto;
+}
+
+:local(.avatar-container) {
+  padding: 0px 5px;
+}
+
+:local(.avatar-menu) {
+  position: absolute;
+  top: 60px;
+  right: 8px;
+  display: flex;
+  flex-direction: row;
+  border-radius: 12px;
+  pointer-events: none;
+  padding: 4px;
+
+  &:active {
+    background-color: transparent;
+  }
+
+  @media(min-width: theme.$breakpoint-lg) {
+    top: 76px;
+    right: 24px;
+  }
+
+  span {
+    position: relative;
+    top: 3px;
+    justify-content: center;
+    display: flex;
+  }
+}
+
+:local(.avatar-menu-button) {
+  display: flex;
+  flex-direction: row;
+  border: none;
+  border-radius: 8px;
+  background-color: theme.$transparent;
+  font-size: theme.$font-size-xs;
+  font-weight: theme.$font-weight-bold;
+  align-items: center;
+  padding: 8px 10px;
+
+  & > * {
+    margin-right: 8px;
+
+    &:last-child {
+      margin-right: 0;
+    }
+  }
+
+  &:hover {
+    background-color: transparent;
+  }
+
+  &:active {
+    background-color: transparent;
+  }
+
+  svg {
+    color: theme.$text1-color;
+  }
+}
+
+:local(.active) {
+  color: theme.$text5-color;
+  background-color: theme.$active-color;
+
+  svg {
+    color: theme.$text5-color;
+  }
+
+  &:hover {
+    background-color: transparent;
+  }
+
+  &:active {
+    background-color: transparent;
+  }
+}
+
+:local(.separator) {
+  width: 1px;
+  margin: 0 8px;
+  background-color: theme.$border1-color;
+}
+
+
+:local(.image) img {
+  margin: auto;
+  max-width: 44px;
+  aspect-ratio: auto 1 / 1; 
+  border: 2.5px solid rgb(103, 99, 236);
+  border-radius: 50% !important;
+}
+
+:local(.toolbar-button) {
+    border: none;
+    background-color: transparent;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    width: 48px;
+
+    label {
+        cursor: pointer;
+        color: theme.$text1-color;
+        margin-top: 8px;
+        margin-bottom: 3px;
+        white-space: nowrap;
+
+        &:disabled,
+        &[disabled] {
+            cursor: default;
+        }
+    }
+
+    &:disabled,
+    &[disabled] {
+        cursor: default;
+    }
+}
+
+.ToolbarButtonAlt {
+    position: relative;
+    border-radius: 9999px;
+    width: 48px;
+    height: 48px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    border: 1px solid theme.$transparent;
+    background-color: theme.$transparent;
+
+    transition: background-color 0.1s ease-in-out, border-color 0.1s ease-in-out;
+
+    svg {
+        color: theme.$toolbar-icon-color;
+
+        *[stroke=\#000] {
+            transition: stroke 0.1s ease-in-out;
+        }
+
+        *[fill=\#000] {
+            transition: fill 0.1s ease-in-out;
+        }
+    }
+}
+
+:local(.large) .ToolbarButtonAlt {
+    width: 96px;
+    height: 96px;
+}
+
+.ToolbarButtonAltBasic,
+:local(.transparent) {
+    .ToolbarButtonAlt {
+        border-color: theme.$toolbar-basic-border-color;
+        background-color: theme.$transparent;
+        ;
+
+        svg {
+            color: theme.$toolbar-basic-icon-color;
+        }
+
+        &:disabled,
+        &[disabled] {
+            border-color: theme.$transparent;
+            background-color: theme.$disabled-bg-color;
+
+            svg {
+                color: theme.$disabled-icon-color;
+            }
+        }
+    }
+
+    &:hover .ToolbarButtonAlt {
+        border: 1px solid theme.$toolbar-basic-border-color;
+        background-color: theme.$basic-color-hover;
+
+        &:disabled,
+        &[disabled] {
+            border-color: theme.$transparent;
+            background-color: theme.$disabled-bg-color;
+
+            svg {
+                color: theme.$disabled-icon-color;
+            }
+        }
+    }
+
+    &:active .ToolbarButtonAlt {
+        border-color: theme.$basic-color-pressed;
+        background-color: theme.$basic-color-pressed;
+    }
+
+    &:local(.selected) {
+        .ToolbarButtonAlt {
+            border-color: transparent;
+            background-color: theme.$toolbar-icon-selected-bg;
+        }
+
+        svg {
+            color: theme.$toolbar-basic-selected-icon-color;
+        }
+
+        label {
+            color: theme.$text4-color;
+        }
+
+        &:hover {
+            .ToolbarButtonAlt {
+                background-color: theme.$toolbar-basic-color-hover;
+            }
+        }
+
+        &:active {
+            .ToolbarButtonAlt {
+                background-color: theme.$toolbar-basic-color-pressed;
+            }
+        }
+    }
+}
+
+:local(.transparent) .ToolbarButtonAlt {
+    border-color: theme.$transparent;
+}
+
+:local(.primary) {
+    .ToolbarButtonAlt {
+        background-color: theme.$primary-color;
+
+        &:disabled,
+        &[disabled] {
+            svg {
+                color: theme.$disabled-icon-color;
+            }
+        }
+    }
+
+    &:hover .ToolbarButtonAlt {
+        background-color: theme.$primary-color-hover;
+    }
+
+    &:active .ToolbarButtonAlt {
+        background-color: theme.$primary-color-pressed;
+    }
+
+    &:local(.selected) {
+        .ToolbarButtonAlt {
+            border-color: theme.$primary-color;
+            background-color: theme.$toolbar-icon-selected-bg;
+
+            svg {
+                color: theme.$toolbar-basic-icon-color;
+            }
+        }
+
+        label {
+            color: theme.$primary-color;
+        }
+
+        &:hover {
+            .ToolbarButtonAlt {
+                border-color: theme.$primary-color-hover;
+                background-color: theme.$toolbar-basic-color-hover;
+
+                svg {
+                    color: theme.$primary-color-hover;
+                }
+
+                &:disabled,
+                &[disabled] {
+                    svg {
+                        color: theme.$disabled-icon-color;
+                    }
+                }
+            }
+
+            &:disabled,
+            &[disabled] {
+                border-color: theme.$transparent;
+                background-color: theme.$disabled-bg-color;
+
+                svg {
+                    color: theme.$disabled-icon-color;
+                }
+            }
+        }
+
+        &:active {
+            .ToolbarButtonAlt {
+                border-color: theme.$primary-color-pressed;
+
+                svg {
+                    color: theme.$primary-color-pressed;
+                }
+            }
+        }
+    }
+}
+
+
+:local(.accept) {
+    .ToolbarButtonAlt {
+        background-color: theme.$accept-color;
+        border-color: theme.$accept-border-color;
+
+        &:disabled,
+        &[disabled] {
+            svg {
+                color: theme.$disabled-icon-color;
+            }
+        }
+    }
+
+    &:hover .ToolbarButtonAlt {
+        background-color: theme.$accept-color-hover;
+
+        &:disabled,
+        &[disabled] {
+            svg {
+                color: theme.$disabled-icon-color;
+            }
+        }
+    }
+
+    &:active .ToolbarButtonAlt {
+        background-color: theme.$accept-color-pressed;
+    }
+
+    &:local(.selected) {
+        .ToolbarButtonAlt {
+            border-color: theme.$accept-color;
+            background-color: theme.$toolbar-icon-selected-bg;
+
+            svg {
+                color: theme.$accept-color;
+            }
+        }
+
+        label {
+            color: theme.$accept-color;
+        }
+
+        &:hover {
+            .ToolbarButtonAlt {
+                border-color: theme.$accept-color-hover;
+
+                svg {
+                    color: theme.$accept-color-hover;
+                }
+            }
+        }
+
+        &:active {
+            .ToolbarButtonAlt {
+                border-color: theme.$accept-color-pressed;
+
+                svg {
+                    color: theme.$accept-color-pressed;
+                }
+            }
+        }
+    }
+}
+
+:local(.cancel) {
+    .ToolbarButtonAlt {
+        background-color: theme.$cancel-color;
+
+        &:disabled,
+        &[disabled] {
+            svg {
+                color: theme.$disabled-icon-color;
+            }
+        }
+    }
+
+    &:hover .ToolbarButtonAlt {
+        background-color: theme.$cancel-color-hover;
+
+        &:disabled,
+        &[disabled] {
+            svg {
+                color: theme.$disabled-icon-color;
+            }
+        }
+    }
+
+    &:active .ToolbarButtonAlt {
+        background-color: theme.$cancel-color-pressed;
+    }
+
+    &:local(.selected) {
+        .ToolbarButtonAlt {
+            border-color: theme.$cancel-color;
+            background-color: theme.$toolbar-icon-selected-bg;
+
+            svg {
+                color: theme.$cancel-color;
+            }
+        }
+
+        label {
+            color: theme.$cancel-color;
+        }
+
+        &:hover {
+            .ToolbarButtonAlt {
+                border-color: theme.$cancel-color-hover;
+
+                svg {
+                    color: theme.$cancel-color-hover;
+                }
+            }
+        }
+
+        &:active {
+            .ToolbarButtonAlt {
+                border-color: theme.$cancel-color-pressed;
+
+                svg {
+                    color: theme.$cancel-color-pressed;
+                }
+            }
+        }
+    }
+}
+
+:local(.accent1) {
+    .ToolbarButtonAlt {
+        background-color: theme.$accent1-color;
+        border-color: theme.$accent1-border-color;
+
+        &:disabled,
+        &[disabled] {
+            svg {
+                color: theme.$disabled-icon-color;
+            }
+        }
+    }
+
+    &:hover .ToolbarButtonAlt {
+        background-color: theme.$accent1-color-hover;
+
+        &:disabled,
+        &[disabled] {
+            background-color: theme.$accent1-color;
+        }
+    }
+
+    &:active .ToolbarButtonAlt {
+        background-color: theme.$accent1-color-pressed;
+    }
+
+    &:local(.selected) {
+        .ToolbarButtonAlt {
+            border-color: theme.$accent1-color;
+            background-color: theme.$toolbar-icon-selected-bg;
+
+            svg {
+                color: theme.$accent1-color;
+            }
+        }
+
+        label {
+            color: theme.$toolbar-label-accent1;
+        }
+
+        &:hover {
+            .ToolbarButtonAlt {
+                border-color: theme.$accent1-color-hover;
+
+                svg {
+                    color: theme.$accent1-color-hover;
+                }
+            }
+
+            &:disabled,
+            &[disabled] {
+                svg {
+                    color: theme.$disabled-icon-color;
+                }
+            }
+        }
+
+        &:active {
+            .ToolbarButtonAlt {
+                border-color: theme.$accent1-color-pressed;
+
+                svg {
+                    color: theme.$accent1-color-pressed;
+                }
+            }
+        }
+    }
+}
+
+:local(.accent2) {
+    .ToolbarButtonAlt {
+        background-color: theme.$accent2-color;
+        border-color: theme.$accent2-border-color;
+
+        &:disabled,
+        &[disabled] {
+            svg {
+                color: theme.$disabled-icon-color;
+            }
+        }
+    }
+
+    &:hover .ToolbarButtonAlt {
+        background-color: theme.$accent2-color-hover;
+
+        &:disabled,
+        &[disabled] {
+            svg {
+                color: theme.$disabled-icon-color;
+            }
+        }
+    }
+
+    &:active .ToolbarButtonAlt {
+        background-color: theme.$accent2-color-pressed;
+    }
+
+    &:local(.selected) {
+        .ToolbarButtonAlt {
+            border-color: theme.$accent2-color;
+            background-color: theme.$toolbar-icon-selected-bg;
+
+            svg {
+                color: theme.$accent2-color;
+            }
+        }
+
+        label {
+            color: theme.$toolbar-label-accent2;
+        }
+
+        &:hover {
+            .ToolbarButtonAlt {
+                border-color: theme.$accent2-color-hover;
+
+                svg {
+                    color: theme.$accent2-color-hover;
+                }
+            }
+        }
+
+        &:active {
+            .ToolbarButtonAlt {
+                border-color: theme.$accent2-color-pressed;
+
+                svg {
+                    color: theme.$accent2-color-pressed;
+                }
+            }
+        }
+    }
+}
+
+:local(.accent3) {
+    .ToolbarButtonAlt {
+        background-color: theme.$accent3-color;
+        border-color: theme.$accent3-border-color;
+
+        &:disabled,
+        &[disabled] {
+            svg {
+                color: theme.$disabled-icon-color;
+            }
+        }
+    }
+
+    &:hover .ToolbarButtonAlt {
+        background-color: theme.$accent3-color-hover;
+
+        &:disabled,
+        &[disabled] {
+            svg {
+                color: theme.$disabled-icon-color;
+            }
+        }
+    }
+
+    &:active .ToolbarButtonAlt {
+        background-color: theme.$accent3-color-pressed;
+    }
+
+    &:local(.selected) {
+        .ToolbarButtonAlt {
+            border-color: theme.$accent3-color;
+            background-color: theme.$toolbar-icon-selected-bg;
+
+            svg {
+                color: theme.$accent3-color;
+            }
+        }
+
+        label {
+            color: theme.$toolbar-label-accent3;
+        }
+
+        &:hover {
+            .ToolbarButtonAlt {
+                border-color: theme.$accent3-color-hover;
+
+                svg {
+                    color: theme.$accent3-color-hover;
+                }
+            }
+        }
+
+        &:active {
+            .ToolbarButtonAlt {
+                border-color: theme.$accent3-color-pressed;
+
+                svg {
+                    color: theme.$accent3-color-pressed;
+                }
+            }
+        }
+    }
+}
+
+:local(.accent4) {
+    .ToolbarButtonAlt {
+        background-color: theme.$accent4-color;
+        border-color: theme.$accent4-border-color;
+
+        &:disabled,
+        &[disabled] {
+            svg {
+                color: theme.$disabled-icon-color;
+            }
+        }
+    }
+
+    &:hover .ToolbarButtonAlt {
+        background-color: theme.$accent4-color-hover;
+
+        &:disabled,
+        &[disabled] {
+            svg {
+                color: theme.$disabled-icon-color;
+            }
+        }
+    }
+
+    &:active .ToolbarButtonAlt {
+        background-color: theme.$accent4-color-pressed;
+    }
+
+    &:local(.selected) {
+        .ToolbarButtonAlt {
+            border-color: theme.$accent4-color;
+            background-color: theme.$toolbar-icon-selected-bg;
+
+            svg {
+                color: theme.$accent4-color;
+            }
+        }
+
+        label {
+            color: theme.$toolbar-label-accent4;
+        }
+
+        &:hover {
+            .ToolbarButtonAlt {
+                border-color: theme.$accent4-color-hover;
+
+                svg {
+                    color: theme.$accent4-color-hover;
+                }
+            }
+        }
+
+        &:active {
+            .ToolbarButtonAlt {
+                border-color: theme.$accent4-color-pressed;
+
+                svg {
+                    color: theme.$accent4-color-pressed;
+                }
+            }
+        }
+    }
+}
+
+:local(.accent5) {
+    .ToolbarButtonAlt {
+        background-color: theme.$accent5-color;
+        border-color: theme.$accent5-border-color;
+
+        &:disabled,
+        &[disabled] {
+            svg {
+                color: theme.$disabled-icon-color;
+            }
+        }
+    }
+
+    &:hover .ToolbarButtonAlt {
+        background-color: theme.$accent5-color-hover;
+
+        &:disabled,
+        &[disabled] {
+            svg {
+                color: theme.$disabled-icon-color;
+            }
+        }
+    }
+
+    &:active .ToolbarButtonAlt {
+        background-color: theme.$accent5-color-pressed;
+    }
+
+    &:local(.selected) {
+        .ToolbarButtonAlt {
+            border-color: theme.$accent5-color;
+            background-color: theme.$toolbar-icon-selected-bg;
+
+            svg {
+                color: theme.$accent5-color;
+            }
+        }
+
+        label {
+            color: theme.$toolbar-label-accent5;
+        }
+
+        &:hover {
+            .ToolbarButtonAlt {
+                border-color: theme.$accent5-color-hover;
+
+                svg {
+                    color: theme.$accent5-color-hover;
+                }
+            }
+        }
+
+        &:active {
+            .ToolbarButtonAlt {
+                border-color: theme.$accent5-color-pressed;
+
+                svg {
+                    color: theme.$accent5-color-pressed;
+                }
+            }
+        }
+    }
+}
+
+:local(.status-indicator) {
+    position: absolute;
+    top: 5px;
+    width: 5px;
+    height: 5px;
+    border-radius: 5px;
+}
+
+:local(.status-enabled) {
+    background-color: theme.$status-enabled-color;
+}
+
+:local(.status-disabled) {
+    background-color: theme.$status-disabled-color;
+}
+
+
+:local(.status-unread) {
+    background-color: theme.$status-unread-color;
+}
+
+:local(.status-recording) {
+    background-color: theme.$status-recording-color;
+}
+
+:local(.left) {
+    .ToolbarButtonAlt {
+        width: 48px;
+        border-radius: 0px;
+        border-top-left-radius: 9999px;
+        border-bottom-left-radius: 9999px;
+    }
+}
+
+:local(.middle) {
+    .ToolbarButtonAlt {
+        border-radius: 0px;
+    }
+}
+
+:local(.right) {
+    .ToolbarButtonAlt {
+        width: 48px;
+        border-radius: 0px;
+        border-top-right-radius: 9999px;
+        border-bottom-right-radius: 9999px;
+    }
+}
+
+:local(.chat-input-container) {
+  padding: 8px 16px;
+  background-color: theme.$input-bg-color;
+  flex-basis: max-content;
+}
+
+:local(.message-list) {
+  display: flex;
+  flex-grow: 1;
+  flex-direction: column;
+  list-style: none;
+  padding: 0 16px;
+  overflow-y: auto;
+  min-height: 0;
+}
+
+:local(.message-group) {
+  display: flex;
+  flex-direction: column;
+  flex-shrink: 0;
+  width: 100%;
+  padding-top: 16px;
+
+  &:last-child {
+    padding-bottom: 8px;
+  }
+}
+
+:local(.message-group-label) {
+  color: theme.$text2-color;
+  font-size: theme.$font-size-xs;
+  display: flex;
+  margin: 2px;
+}
+
+:local(.message-group-messages) {
+  display: flex;
+  flex-direction: column;
+}
+
+:local(.message-bubble) {
+  background-color: theme.$chat-bubble-bg-color-received;
+  border-radius: 19px;
+  margin: 2px;
+  padding: 10px 16px;
+  max-width: 80%;
+  width: max-content;
+  font-size: theme.$font-size-md;
+  overflow-wrap: break-word;
+  line-height: 1.25;
+
+  img,
+  video {
+    max-height: 240px;
+    border-radius: 18px;
+  }
+
+  a {
+    text-decoration: underline;
+  }
+}
+
+:local(.sent) {
+  :local(.message-group-label) {
+    align-self: flex-end;
+  }
+
+  :local(.message-bubble) {
+    background-color: theme.$chat-bubble-bg-color-sent;
+    color: theme.$chat-bubble-text-color-sent;
+    align-self: flex-end;
+
+    a {
+      color: theme.$chat-bubble-text-color-sent;
+
+      &:hover {
+        color: theme.$chat-bubble-link-color-sent-hover;
+      }
+
+      &:active {
+        color: theme.$chat-bubble-link-color-sent-pressed;
+      }
+    }
+  }
+}
+
+:local(.message-bubble):local(.emoji),
+:local(.message-bubble):local(.media) {
+  font-size: 32px;
+  background-color: theme.$transparent;
+  padding: 0;
+}
+
+:local(.message-bubble):local(.monospace) {
+  font-family: monospace;
+}
+
+:local(.system-message) :local(.message-group-label) {
+  display: inline;
+  vertical-align: bottom;
+
+  i {
+    font-size: theme.$font-size-xs;
+    color: theme.$text2-color;
+  }
+
+  span {
+    margin-left: 1ch;
+  }
+}
+
+:local(.message-bubble):local(.permission) {
+  display: flex;
+  gap: 10px;
+  background-color: theme.$transparent;
+  border: 1px solid theme.$input-border-color;
+  color: theme.$text1-color;
+  align-items: center;
+}
+
+:local(.chat-input-icon) {
+  cursor: pointer;
+  width: 24px;
+
+  &:disabled,
+  &[disabled] {
+    cursor: default;
+  }
+
+  svg {
+    color: theme.$input-icon-color;
+  }
+}
+
+:local(.chat-input-warning) {
+  padding-top: theme.$spacing-2xs;
+}
+
+:local(.warning-border) {
+  border: 2px solid theme.$red !important;
+}
+
+:local(.warning-text-color) {
+  color: theme.$red;
+}
+
+:local(.chat-input-text-area-styles) {
+  max-height: 50vh;
+}
+
+.centercontent {
+  display: flex;
+  justify-content: center;
+}
+
+#notecolors {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(48px, 1fr));
+  gap: 16px;
+  grid-auto-flow: column;
+  align-items: center;
+  justify-items: center;
+}
+
+#notetitle,
+#notecategory,
+#notecolorstitle,
+#notecontent {
+  padding: 12px;
+}
+
+.buttonUnselected .ButtonOverride {
+  border-width: 1px;
+  border-color: transparent;
+}
+
+.buttonSelected .ButtonOverride {
+  border-width: 4px;
+  border-color: #008cd3;
+}
+
+.bgColor1 {
+    background-color: #ffe992;
+}
+
+.bgColor2 {
+    background-color: #6ab9ff;
+}
+
+.bgColor3 {
+    background-color: #6fed99;
+}
+
+.bgColor4 {
+    background-color: #ffc0cb;
+}
+
+.categoryTile {
+    width: 410px;
+    height: 220px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-family: theme.$font-family-default;
+    font-weight: 600;
+    color: black;
+}

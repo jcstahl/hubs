@@ -8,6 +8,7 @@ import {
 } from "../../systems/sound-effects-system";
 import { waitForDOMContentLoaded } from "../../utils/async-utils";
 import { convertStandardMaterial } from "../../utils/material-utils";
+import { CheckNoteReady, NotePosition } from "../../react-components/room/NoteSidebarContainer"; //moonfactory追加
 
 const pathsMap = {
   "player-right-controller": {
@@ -99,7 +100,8 @@ AFRAME.registerComponent("pen", {
     near: { default: 0.01 },
     drawMode: { default: DRAW_MODE.DEFAULT_3D, oneOf: [DRAW_MODE.DEFAULT_3D, DRAW_MODE.PROJECTION] },
     penVisible: { default: true },
-    penTipPosition: { default: { x: 0, y: 0, z: 0 } }
+    penTipPosition: { default: { x: 0, y: 0, z: 0 } },
+    laserEnd: { default: { x: 0, y: 0, z: 0 } } //moonfactory追加
   },
 
   init() {
@@ -256,8 +258,17 @@ AFRAME.registerComponent("pen", {
       const sfx = this.el.sceneEl.systems["hubs-systems"].soundEffectsSystem;
       const paths = pathsMap[this.grabberId];
       if (userinput.get(paths.startDrawing)) {
-        this._startDraw();
-        sfx.playSoundOneShot(SOUND_PEN_START_DRAW);
+		//moonfactory追加
+		//レーザーポインターの位置を返す
+        if (CheckNoteReady())
+        {
+          NotePosition(this.data.laserEnd);
+        }
+        else
+        {
+          this._startDraw();
+          sfx.playSoundOneShot(SOUND_PEN_START_DRAW);
+        }
       }
       if (userinput.get(paths.stopDrawing)) {
         this._endDraw();
@@ -375,6 +386,7 @@ AFRAME.registerComponent("pen", {
         this.penLaserAttributes.laserTarget.z = laserEndPosition.z;
         this.penLaserAttributesUpdated = true;
       }
+      this.data.laserEnd = laserEndPosition; //moonfactory追加
     };
   })(),
 
@@ -401,9 +413,15 @@ AFRAME.registerComponent("pen", {
       if (
         time >= this.data.drawFrequency &&
         this.currentDrawing.getLastPoint().distanceTo(this.worldPosition) >= this.data.minDistanceBetweenPoints
-      ) {
-        this._getNormal(this.normal, this.worldPosition, this.direction);
-        this.currentDrawing.draw(this.worldPosition, this.direction, this.normal, this.data.color, this.data.radius);
+      ) 
+      {
+		//moonfactory追加
+		//付箋じゃない場合のコード
+        if (!this.noteReady)
+        {
+          this._getNormal(this.normal, this.worldPosition, this.direction);
+          this.currentDrawing.draw(this.worldPosition, this.direction, this.normal, this.data.color, this.data.radius);
+        }
       }
 
       this.timeSinceLastDraw = time % this.data.drawFrequency;

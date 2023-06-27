@@ -45,9 +45,11 @@
       margin-left: 4px;
       overflow-wrap: break-word;
       overflow: hidden;
-      max-width: 500px;
+      width: 80px; //moonfactory追加
+      max-width: 80px; //moonfactory編集
       padding-bottom: 8px;
     }
+
     /* this checks if a sibling has the message source for when have chat closed and resets padding */
     :local(.message-source + .message-body) {
       padding-bottom: 0px;
@@ -201,14 +203,16 @@
   margin: 0;
 
   :local(.presence-log-entry) {
-    background-color: black;
-    color: white;
+    background-color: transparent; //moonfactory編集
+    color: black; //moonfactory編集
     min-height: 18px;
     padding: 8px 16px;
     border-radius: 16px;
     line-height: 18px;
     margin: 0;
     max-width: 100%;
+    aspect-ratio: 1 / 1; //moonfactory追加
+    justify-content: center; //moonfactory追加
 
     :local(.message-body) {
       margin-left: 0;

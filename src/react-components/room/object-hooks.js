@@ -9,6 +9,18 @@ function getPinnedState(el) {
   return !!(hasComponent(APP.world, Pinnable, el.eid) && hasComponent(APP.world, Pinned, el.eid));
 }
 
+//moonfactory追加
+//オブジェクトが付箋かどうかを確認する為
+export function isNote(object) {
+  return object.el.dataset.isnote;
+}
+
+//moonfactory追加
+//付箋のデータを返す
+export function getNoteData(object, secondary) {
+  return {position: object.el.object3D.position, rotation: object.el.object3D.rotation, message: object.el.dataset.message, category: object.el.dataset.category, title: object.el.dataset.title, color: object.el.dataset.color, delete: secondary};
+}
+
 export function isMe(object) {
   return object.el.id === "avatar-rig";
 }

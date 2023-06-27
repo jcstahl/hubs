@@ -154,8 +154,15 @@ export function coerceToUrl(urlOrText) {
   return urlOrText.indexOf("://") >= 0 ? urlOrText : `https://${urlOrText}`;
 }
 
-export const addMedia = (
+//moonfactory追加
+//付箋を作成するコード
+export const addNote = (
   src,
+  isNote,
+  message,
+  category,
+  title,
+  color,
   template,
   contentOrigin,
   contentSubtype = null,
@@ -167,6 +174,7 @@ export const addMedia = (
   parentEl = null,
   linkedEl = null
 ) => {
+
   const scene = AFRAME.scenes[0];
 
   const entity = document.createElement("a-entity");
@@ -208,6 +216,115 @@ export const addMedia = (
     linkedEl,
     mediaOptions
   });
+
+  entity.setAttribute("data-isnote", isNote);
+  entity.setAttribute("data-message", message);
+  entity.setAttribute("data-category", category);
+  entity.setAttribute("data-title", title);
+  entity.setAttribute("data-color", color);
+
+  entity.object3D.matrixNeedsUpdate = true;
+
+  (parentEl || scene).appendChild(entity);
+
+  const orientation = new Promise(function (resolve) {
+    if (needsToBeUploaded) {
+      getOrientation(src, x => {
+        resolve(x);
+      });
+    } else {
+      resolve(1);
+    }
+  });
+  if (needsToBeUploaded) {
+    // Video camera videos are converted to mp4 for compatibility
+    const desiredContentType = contentSubtype === "video-camera" ? "video/mp4" : src.type || guessContentType(src.name);
+
+    upload(src, desiredContentType)
+      .then(response => {
+        const srcUrl = new URL(proxiedUrlFor(response.origin));
+        srcUrl.searchParams.set("token", response.meta.access_token);
+        entity.setAttribute("media-loader", { resolve: false, src: srcUrl.href, fileId: response.file_id });
+        window.APP.store.update({
+          uploadPromotionTokens: [{ fileId: response.file_id, promotionToken: response.meta.promotion_token }]
+        });
+      })
+      .catch(e => {
+        console.error("Media upload failed", e);
+        entity.setAttribute("media-loader", { src: "error" });
+      });
+  } else if (src instanceof MediaStream) {
+    entity.setAttribute("media-loader", { src: `hubs://clients/${NAF.clientId}/video` });
+  }
+
+  if (contentOrigin) {
+    entity.addEventListener("media_resolved", ({ detail }) => {
+      const objectType = objectTypeForOriginAndContentType(contentOrigin, detail.contentType, detail.src);
+      scene.emit("object_spawned", { objectType });
+    });
+  }
+
+  return { entity, orientation };
+};
+
+export const addMedia = (
+  src,
+  isNote, //moonfactory追加
+  template,
+  contentOrigin,
+  contentSubtype = null,
+  resolve = false,
+  fitToBox = false,
+  animate = true,
+  mediaOptions = {},
+  networked = true,
+  parentEl = null,
+  linkedEl = null
+) => {
+
+  const scene = AFRAME.scenes[0];
+
+  const entity = document.createElement("a-entity");
+
+  const nid = NAF.utils.createNetworkId();
+  if (networked) {
+    entity.setAttribute("networked", { template: template, networkId: nid });
+  } else {
+    const templateBody = document
+      .importNode(document.body.querySelector(template).content, true)
+      .firstElementChild.cloneNode(true);
+    const elAttrs = templateBody.attributes;
+
+    // Merge root element attributes with this entity
+    for (let attrIdx = 0; attrIdx < elAttrs.length; attrIdx++) {
+      entity.setAttribute(elAttrs[attrIdx].name, elAttrs[attrIdx].value);
+    }
+
+    // Append all child elements
+    while (templateBody.firstElementChild) {
+      entity.appendChild(templateBody.firstElementChild);
+    }
+  }
+
+  const needsToBeUploaded = src instanceof File;
+
+  // If we're re-pasting an existing src in the scene, we should use the latest version
+  // seen across any other entities. Otherwise, start with version 1.
+  const version = getLatestMediaVersionOfSrc(src);
+
+  entity.setAttribute("media-loader", {
+    fitToBox,
+    resolve,
+    animate,
+    src: typeof src === "string" ? coerceToUrl(src) || src : "",
+    version,
+    contentSubtype,
+    fileIsOwned: !needsToBeUploaded,
+    linkedEl,
+    mediaOptions
+  });
+
+  entity.setAttribute("data-isnote", isNote); //moonfactory追加
 
   entity.object3D.matrixNeedsUpdate = true;
 
@@ -262,6 +379,7 @@ export const cloneMedia = (sourceEl, template, src = null, networked = true, lin
 
   return addMedia(
     src,
+    isNote, //moonfactory追加
     template,
     ObjectContentOrigins.URL,
     contentSubtype,

@@ -2,6 +2,7 @@ import React from "react";
 import ReactDOM from "react-dom";
 import PropTypes from "prop-types";
 import styles from "../assets/stylesheets/presence-log.scss";
+import mfstyles from "../assets/stylesheets/moonfactory.scss"; //moonfactory追加
 import classNames from "classnames";
 import html2canvas from "html2canvas";
 import { coerceToUrl } from "../utils/media-utils";
@@ -66,7 +67,45 @@ function renderChatMessage(body, from, allowEmojiRender) {
       const height = el.offsetHeight;
       const ratio = height / width;
       const scale = (CHAT_MESSAGE_TEXTURE_SIZE * Math.min(1.0, 1.0 / ratio)) / el.offsetWidth;
+      
       html2canvas(el, { backgroundColor: null, scale, logging: false })
+        .then(canvas => {
+          canvas.toBlob(blob => resolve([blob, width, height]), "image/png");
+          el.remove();
+        })
+        .catch(reject);
+    });
+  });
+}
+
+//moonfactory追加
+function renderNote(data, from, allowEmojiRender) {
+  const { content, emoji, multiline } = messageBodyDom(data.message, from, null, null, styles.emoji);
+  const isEmoji = allowEmojiRender && emoji;
+  const el = document.createElement("div");
+  el.setAttribute("class", `${styles.presenceLog} ${styles.presenceLogSpawn}`);
+  document.body.appendChild(el);
+
+  const entryDom = (
+    <div
+      className={classNames({
+        [styles.presenceLogEntry]: !isEmoji,
+        [styles.presenceLogEntryOneLine]: !isEmoji && !multiline,
+        [styles.presenceLogEmoji]: isEmoji
+      })}
+    >
+      <span>{content}</span>
+      <span className={mfstyles.noteTitle}>{data.title}</span>
+    </div>
+  );
+
+  return new Promise((resolve, reject) => {
+    ReactDOM.render(entryDom, el, () => {
+      const width = el.offsetWidth;
+      const height = el.offsetHeight;
+      const scale = 10;
+      //HTMLから付箋の画像を作る
+      html2canvas(el, { backgroundColor: data.color, scale, logging: false })
         .then(canvas => {
           canvas.toBlob(blob => resolve([blob, width, height]), "image/png");
           el.remove();
@@ -160,6 +199,26 @@ export async function spawnChatMessage(body, from) {
   document.querySelector("a-scene").emit("add_media", new File([blob], "message.png", { type: "image/png" }));
 }
 
+//moonfactory追加
+export async function spawnNoteMessage(data, from) {
+  if (data.message.length === 0) return;
+
+  try {
+    const url = new URL(coerceToUrl(data.message));
+    if (url.host) {
+      document.querySelector("a-scene").emit("add_media", data.message);
+      return;
+    }
+  } catch (e) {
+    // Ignore parse error
+  }
+
+  // If not a URL, spawn as a text bubble
+
+  const [blob] = await renderNote(data, from, true);
+  document.querySelector("a-scene").emit("add_note", {file: new File([blob], "message.png", { type: "image/png" }), data: data});
+}
+
 export default function ChatMessage(props) {
   const { content } = messageBodyDom(props.body, props.name, props.sessionId, props.onViewProfile);
 
@@ -180,6 +239,7 @@ ChatMessage.propTypes = {
   name: PropTypes.string,
   maySpawn: PropTypes.bool,
   body: PropTypes.string,
+  title: PropTypes.string, //moonfactory追加
   sessionId: PropTypes.string,
   className: PropTypes.string,
   onViewProfile: PropTypes.func

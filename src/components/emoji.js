@@ -47,7 +47,7 @@ export const emojis = [
 });
 
 export function spawnEmojiInFrontOfUser({ model, particleEmitterConfig }) {
-  const { entity } = addMedia(model, "#interactable-emoji");
+  const { entity } = addMedia(model, "notNote", "#interactable-emoji");
   entity.setAttribute("offset-relative-to", {
     target: "#avatar-pov-node",
     offset: { x: 0, y: 0, z: -1.5 }
