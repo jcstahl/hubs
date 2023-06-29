@@ -887,6 +887,70 @@ $semi-bold: 600;
     }
 }
 
+:local(.accent7) {
+    .ToolbarButtonAlt {
+        background-color: theme.$accent7-color;
+        border-color: theme.$accent7-border-color;
+
+        &:disabled,
+        &[disabled] {
+            svg {
+                color: theme.$disabled-icon-color;
+            }
+        }
+    }
+
+    &:hover .ToolbarButtonAlt {
+        background-color: theme.$accent7-color-hover;
+
+        &:disabled,
+        &[disabled] {
+            svg {
+                color: theme.$disabled-icon-color;
+            }
+        }
+    }
+
+    &:active .ToolbarButtonAlt {
+        background-color: theme.$accent7-color-pressed;
+    }
+
+    &:local(.selected) {
+        .ToolbarButtonAlt {
+            border-color: theme.$accent7-color;
+            background-color: theme.$toolbar-icon-selected-bg;
+
+            svg {
+                color: theme.$accent7-color;
+            }
+        }
+
+        label {
+            color: theme.$toolbar-label-accent7;
+        }
+
+        &:hover {
+            .ToolbarButtonAlt {
+                border-color: theme.$accent7-color-hover;
+
+                svg {
+                    color: theme.$accent7-color-hover;
+                }
+            }
+        }
+
+        &:active {
+            .ToolbarButtonAlt {
+                border-color: theme.$accent7-color-pressed;
+
+                svg {
+                    color: theme.$accent7-color-pressed;
+                }
+            }
+        }
+    }
+}
+
 :local(.status-indicator) {
     position: absolute;
     top: 5px;

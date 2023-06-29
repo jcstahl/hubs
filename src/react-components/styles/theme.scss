@@ -42,6 +42,11 @@ $green: #7ED320;
 $green-hover: #8CDF2F;
 $green-pressed: #72BE1D;
 
+//moonfactory追加
+$aqua: #30c9ad;
+$aqua-hover: #45dfc2;
+$aqua-pressed: #25bca1;
+
 $blue: #007AB8;
 $blue-hover: #008BD1;
 $blue-pressed: #00699E;
@@ -155,6 +160,12 @@ $accent6-color: var(--accent6-color);
 $accent6-color-hover: var(--accent6-color-hover);
 $accent6-color-pressed: var(--accent6-color-pressed);
 
+//moonfactory追加
+$accent7-color: var(--accent7-color);
+$accent7-border-color: var(--accent7-border-color);
+$accent7-color-hover: var(--accent7-color-hover);
+$accent7-color-pressed: var(--accent7-color-pressed);
+
 $primary-color: var(--primary-color);
 $primary-color-hover: var(--primary-color-hover);
 $primary-color-pressed: var(--primary-color-pressed);
@@ -261,6 +272,7 @@ $toolbar-label-accent2: var(--toolbar-label-accent2);
 $toolbar-label-accent3: var(--toolbar-label-accent3);
 $toolbar-label-accent4: var(--toolbar-label-accent4);
 $toolbar-label-accent5: var(--toolbar-label-accent5);
+$toolbar-label-accent7: var(--toolbar-label-accent7); //moonfactory追加
 
 $tile-text-color: var(--tile-text-color);
 $tile-bg-color: var(--tile-bg-color);

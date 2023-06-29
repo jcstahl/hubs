@@ -68,6 +68,12 @@
   --accent6-color-hover: #{theme.$black-hover};
   --accent6-color-pressed: #{theme.$black-pressed};
 
+  //moonfactory追加
+  --accent7-color: #{theme.$aqua};
+  --accent7-border-color: var(--accent7-color);
+  --accent7-color-hover: #{theme.$aqua-hover};
+  --accent7-color-pressed: #{theme.$aqua-pressed};
+
   --primary-color: #{theme.$blue};
   --primary-color-hover: #{theme.$blue-hover};
   --primary-color-pressed: #{theme.$blue-pressed};
@@ -174,6 +180,7 @@
   --toolbar-label-accent3: var(--accent3-color);
   --toolbar-label-accent4: var(--accent4-color);
   --toolbar-label-accent5: var(--accent5-color);
+  --toolbar-label-accent7: var(--accent7-color); //moonfactory追加
 
   --tile-text-color: var(--text4-color);
   --tile-bg-color: var(--secondary-color);

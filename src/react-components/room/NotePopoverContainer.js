@@ -30,21 +30,21 @@ export function NotePopoverContainer({ scene, mediaSearchStore, showNonHistoried
         {
             id: "createNote",
             icon: PenIcon,
-            color: "accent1",
+            color: "accent7",
             label: <FormattedMessage id="note-popover.item-type.create" defaultMessage="付箋作成" />,
             onSelect: () => createNote()
         },
         {
             id: "viewCate",
             icon: StickiesIcon,
-            color: "accent1",
+            color: "accent7",
             label: <FormattedMessage id="note-popover.item-type.viewCate" values={{br: <br/>}} defaultMessage="カテゴリー{br}一覧" />,
             onSelect: () => viewCate()
         },
         {
             id: "createCategory",
             icon: PlusIcon,
-            color: "accent1",
+            color: "accent7",
             label: <FormattedMessage id="note-popover.item-type.newCate" values={{br: <br/>}} defaultMessage="カテゴリー{br}追加" />,
             onSelect: () => newCate()
         }

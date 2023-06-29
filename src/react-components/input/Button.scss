@@ -228,6 +228,28 @@
   }
 }
 
+//moonfactory追加
+:local(.accent7) {
+  color: theme.$text5-color;
+  background-color: theme.$accent7-color;
+  border: 2px solid theme.$accent7-border-color;
+
+  svg {
+    color: theme.$text5-color;
+  }
+
+  &:hover {
+    color: theme.$text5-color-hover;
+    background-color: theme.$accent7-color-hover;
+    border: 2px solid theme.$accent7-border-color;
+  }
+
+  &:active {
+    color: theme.$text5-color-pressed;
+    background-color: theme.$accent7-color-pressed;
+  }
+}
+
 :local(.button):disabled {
   border-color: transparent;
   cursor: not-allowed;

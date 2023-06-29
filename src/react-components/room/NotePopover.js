@@ -36,7 +36,7 @@ export function NotePopoverButton({ items }) {
           selected={popoverVisible}
           onClick={togglePopover}
           label={<FormattedMessage id="note-toolbar-button" defaultMessage="付箋" />}
-          preset="accent5"
+          preset="accent7"
         />
       )}
     </Popover>
