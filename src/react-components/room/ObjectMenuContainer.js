@@ -100,7 +100,7 @@ function ObjectMenuItems({ hubChannel, scene, activeObject, deselectObject, onGo
           <FormattedMessage id="object-menu.view-object-button" defaultMessage="View" />
         </span>
       </ObjectMenuButton>
-      {isNote(activeObject) &&  //moonfactory追加
+      {(isNote(activeObject) == "isNote") &&  //moonfactory追加
       (<ObjectMenuButton
         disabled={!canGoTo}
         onClick={() => {
