@@ -72,5 +72,5 @@ CategoryBrowser.propTypes = {
 };
 
 CategoryBrowser.defaultProps = {
-  noResultsMessage: "No Results"
+  noResultsMessage: "このカテゴリーで付箋がありません"
 };

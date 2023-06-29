@@ -139,6 +139,16 @@ export default function CategoryBrowserContainer({
     
   };
 
+  const containsNote = objects => {
+    for (var i=0; i < objects.length; i++) {
+      if (objects[i].category == activeFilter)
+      {
+        return true;
+      }
+    }
+    return false;
+  };
+
   const processThumbnailUrl = (entry, thumbnailWidth, thumbnailHeight) => {
     if (entry.images.preview.type === "mp4") {
       return proxiedUrlFor(entry.images.preview.url);
@@ -156,14 +166,14 @@ export default function CategoryBrowserContainer({
     const showEmptyStringOnNoResult = urlSource !== "avatars" && urlSource !== "scenes";
 
     const facets = DEFAULT_FACETS["scenes"];
-    console.log("facets "+facets);
-
+    //console.log("facets "+facets);
+    
     // Don't render anything if we just did a feeling lucky query and are waiting on result.
     if (state.selectNextResult) return <div />;
     
     const [activeFilter, setFilter] = useState("カテゴリー1");
-    
-      console.log("activeFilter "+activeFilter);
+    //console.log("activeFilter "+activeFilter);
+    //console.log(containsNote(objects));
     return (
       <CategoryBrowser
         onClose={close}
@@ -172,7 +182,7 @@ export default function CategoryBrowserContainer({
         facets={facets}
         onSelectFacet={handleFacetClicked}
       >
-        {objects.length > 0 ? (
+        {containsNote(objects) ? (
           <>
             {objects.map((entry, idx) => {
               {return entry.category == activeFilter ? (
