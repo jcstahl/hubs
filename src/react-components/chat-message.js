@@ -42,6 +42,35 @@ const messageBodyDom = (body, from, fromSessionId, onViewProfile, emojiClassName
   return { content, multiline, emoji };
 };
 
+//moonfactory追加
+const messageBodyDomNote = (body, from, fromSessionId, onViewProfile, emojiClassName) => {
+  const { formattedBody, multiline, monospace, emoji } = formatMessageBody(body, { emojiClassName });
+  const wrapStyle = multiline ? mfstyles.messageWrapMulti : mfstyles.messageWrap;
+  const messageBodyClasses = {
+    [mfstyles.messageBody]: true,
+    [mfstyles.messageBodyMulti]: multiline,
+    [mfstyles.messageBodyMono]: monospace
+  };
+  const includeClientLink = onViewProfile && fromSessionId && history && NAF.clientId !== fromSessionId;
+  const onFromClick = includeClientLink ? () => onViewProfile(fromSessionId) : () => {};
+
+  const content = (
+    <div className={wrapStyle}>
+      {from && (
+        <div
+          onClick={onFromClick}
+          className={classNames({ [mfstyles.messageSource]: true, [mfstyles.messageSourceLink]: includeClientLink })}
+        >
+          {from}:
+        </div>
+      )}
+      <div className={classNames(messageBodyClasses)}>{formattedBody}</div>
+    </div>
+  );
+
+  return { content, multiline, emoji };
+};
+
 function renderChatMessage(body, from, allowEmojiRender) {
   const { content, emoji, multiline } = messageBodyDom(body, from, null, null, styles.emoji);
   const isEmoji = allowEmojiRender && emoji;
@@ -80,18 +109,18 @@ function renderChatMessage(body, from, allowEmojiRender) {
 
 //moonfactory追加
 function renderNote(data, from, allowEmojiRender) {
-  const { content, emoji, multiline } = messageBodyDom(data.message, from, null, null, styles.emoji);
+  const { content, emoji, multiline } = messageBodyDomNote(data.message, from, null, null, mfstyles.emoji);
   const isEmoji = allowEmojiRender && emoji;
   const el = document.createElement("div");
-  el.setAttribute("class", `${styles.presenceLog} ${styles.presenceLogSpawn}`);
+  el.setAttribute("class", `${mfstyles.presenceLog} ${mfstyles.presenceLogSpawn}`);
   document.body.appendChild(el);
 
   const entryDom = (
     <div
       className={classNames({
-        [styles.presenceLogEntry]: !isEmoji,
-        [styles.presenceLogEntryOneLine]: !isEmoji && !multiline,
-        [styles.presenceLogEmoji]: isEmoji
+        [mfstyles.presenceLogEntry]: !isEmoji,
+        [mfstyles.presenceLogEntryOneLine]: !isEmoji && !multiline,
+        [mfstyles.presenceLogEmoji]: isEmoji
       })}
     >
       <span>{content}</span>
