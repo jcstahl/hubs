@@ -897,9 +897,7 @@ class UIRoot extends Component {
           showJoinRoom={!this.state.waitingOnAudio && !this.props.entryDisallowed}
           onJoinRoom={() => {
             this.joinedRoom();
-            //CHANGE BACK TO CODE BELOW
-            this.onAudioReadyButton();
-            /*
+            
             if (promptForNameAndAvatarBeforeEntry || !this.props.forcedVREntryType) {
               this.setState({ entering: true });
               this.props.hubChannel.sendEnteringEvent();
@@ -913,7 +911,6 @@ class UIRoot extends Component {
             } else {
               this.handleForceEntry();
             }
-            */
           }}
           showEnterOnDevice={!this.state.waitingOnAudio && !this.props.entryDisallowed && !isMobileVR}
           onEnterOnDevice={() => this.attemptLink()}
