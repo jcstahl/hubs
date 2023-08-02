@@ -127,6 +127,7 @@ export class PhysicsSystem {
     const inverse = new THREE.Matrix4();
     const matrix = new THREE.Matrix4();
     const scale = new THREE.Vector3();
+    const empty = new THREE.Quaternion(); //moonfactory追加
     return function () {
       if (this.ready) {
         if (this.debugRequested !== this.debugEnabled) {
@@ -151,6 +152,7 @@ export class PhysicsSystem {
             const body = this.bodyUuidToData.get(uuid);
             const index = body.index;
             const type = body.options.type ? body.options.type : TYPE.DYNAMIC;
+            const isNote = body.isNote; //moonfactory追加
             const object3D = body.object3D;
             if (!object3D.parent) {
               // TODO: Fix me
@@ -165,7 +167,15 @@ export class PhysicsSystem {
               object3D.parent.updateMatrices();
               inverse.copy(object3D.parent.matrixWorld).invert();
               transform.multiplyMatrices(inverse, matrix);
-              transform.decompose(object3D.position, object3D.quaternion, scale);
+              //moonfactory編集
+              if (isNote == "isNote")
+              {
+                transform.decompose(object3D.position, empty, scale);
+              }
+              else
+              {
+                transform.decompose(object3D.position, object3D.quaternion, scale);
+              }
               object3D.matrixNeedsUpdate = true;
             }
 
@@ -236,6 +246,29 @@ export class PhysicsSystem {
       shapes: [],
       isInitialized: false,
       removeBodyMessageSent: false
+    });
+
+    return bodyId;
+  }
+
+  //moonfactory追加
+  addBody(object3D, isNote, options) {
+    const bodyId = this.nextBodyUuid;
+    this.nextBodyUuid += 1;
+
+    this.workerHelpers.addBody(bodyId, object3D, options);
+    
+    this.bodyUuidToData.set(bodyId, {
+      object3D: object3D,
+      options: options,
+      collisions: [],
+      linearVelocity: 0,
+      angularVelocity: 0,
+      index: -1,
+      shapes: [],
+      isInitialized: false,
+      removeBodyMessageSent: false,
+      isNote: isNote
     });
 
     return bodyId;
