@@ -250,9 +250,9 @@ export default class SceneEntryManager {
       orientation.then(or => {
         entity.setAttribute("offset-monitor", {
           target: "#avatar-pov-node",
-          pos: { x: -2.1859517097473145, y: 1.9403883752822876  , z: 1.0583729934692383}, //生成の位置
+          pos: { x: -2.2050517097473145, y: 1.9403883752822876  , z: 1.0710729934692383}, //生成の位置
           offset: { x: 0, y: 0, z: 0.05},
-          rotation: new THREE.Euler(0, 2.25, 0),　//生成の回転
+          rotation: new THREE.Euler(0, 2.255, 0),　//生成の回転
           orientation: or
         });
       });
