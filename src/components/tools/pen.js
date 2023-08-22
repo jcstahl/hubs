@@ -99,7 +99,7 @@ AFRAME.registerComponent("pen", {
     far: { default: 100 },
     near: { default: 0.01 },
     drawMode: { default: DRAW_MODE.DEFAULT_3D, oneOf: [DRAW_MODE.DEFAULT_3D, DRAW_MODE.PROJECTION] },
-    penVisible: { default: true },
+    penVisible: { default: false }, //moonfactory編集
     penTipPosition: { default: { x: 0, y: 0, z: 0 } },
     laserEnd: { default: { x: 0, y: 0, z: 0 } } //moonfactory追加
   },
@@ -221,7 +221,7 @@ AFRAME.registerComponent("pen", {
         this._updateLaser(cursorPose, intersection);
       }
 
-      const penVisible = (this.grabberId !== "left-cursor" && this.grabberId !== "right-cursor") || !intersection;
+      const penVisible = false; //moonfactory編集
       this._setPenVisible(penVisible);
       this.el.setAttribute("pen", { penVisible: penVisible });
 
