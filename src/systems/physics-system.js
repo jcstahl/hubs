@@ -252,7 +252,7 @@ export class PhysicsSystem {
   }
 
   //moonfactory追加
-  addBody(object3D, isNote, options) {
+  addBody(object3D, options, isNote) {
     const bodyId = this.nextBodyUuid;
     this.nextBodyUuid += 1;
 

@@ -38,7 +38,7 @@ AFRAME.registerComponent("body-helper", {
     this.system = this.el.sceneEl.systems["hubs-systems"].physicsSystem;
     this.alive = true;
     this.el.object3D.updateMatrices();
-    this.uuid = this.system.addBody(this.el.object3D, this.el.dataset.isnote, this.data); //moonfactory編集
+    this.uuid = this.system.addBody(this.el.object3D, this.data, this.el.dataset.isnote); //moonfactory編集
     const eid = this.el.object3D.eid;
     addComponent(APP.world, Rigidbody, eid);
     Rigidbody.bodyId[eid] = this.uuid; //uuid is a lie, it's actually an int
