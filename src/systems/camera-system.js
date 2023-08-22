@@ -534,7 +534,7 @@ export class CameraSystem {
         }
       } else if (this.mode === CAMERA_MODE_THIRD_PERSON_VIEW) { //moonfactory追加
         this.viewingCameraRotator.on = false;
-        translation.makeTranslation(0, 0, 3);
+        translation.makeTranslation(0, -.5, 1.5);
         this.avatarRig.object3D.updateMatrices();
         setMatrixWorld(this.viewingRig.object3D, this.avatarRig.object3D.matrixWorld);
         if (scene.is("vr-mode")) {
