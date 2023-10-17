@@ -283,7 +283,7 @@ export default class SceneEntryManager {
         entity.setAttribute("offset-global", {
           target: "#avatar-pov-node",
           pos: data.position, //set to spawn position
-          offset: { x: 0, y: 0, z: -0.025},
+          offset: { x: 0, y: 0, z: 0.1},
           rotation: data.rotation,
           orientation: or
         });

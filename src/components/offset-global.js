@@ -78,7 +78,7 @@ AFRAME.registerComponent("offset-global", {
       } else {
         //sets rotation
         console.log("true3");
-        obj.quaternion.setFromEuler(new THREE.Euler(this.data.rotation.x, this.data.rotation.y, this.data.rotation.z));
+        obj.quaternion.setFromEuler(this.data.rotation);
         //target.getWorldQuaternion(obj.quaternion);
       }
       //target always same, obj differs
