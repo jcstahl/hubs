@@ -273,6 +273,7 @@ export const CheckNoteReady = () =>
 export const NotePosition = (value) =>
 {
   data.position = value;
+  data.rotation = new THREE.Euler(0,THREE.MathUtils.degToRad(180),0);
   spawnNoteMessage(data);
   const scene = AFRAME.scenes[0];
   scene.emit("penButtonPressed");
