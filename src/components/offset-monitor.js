@@ -69,7 +69,7 @@ AFRAME.registerComponent("offset-monitor", {
       obj.position.copy(offsetVector);
       
       console.log("scale1 "+obj.scale.x+" "+obj.scale.y+" "+obj.scale.z);
-      obj.scale.set(2.3,2.3,2.3);
+      obj.scale.set(2.88,2.88,2.88);
       console.log("scale2 "+obj.scale.x+" "+obj.scale.y+" "+obj.scale.z);
       console.log("getWorldQuaternion pos "+offsetVector.x+" "+offsetVector.y+" "+offsetVector.z);
 
