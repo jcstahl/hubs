@@ -273,6 +273,11 @@ export const CheckNoteReady = () =>
 export const NotePosition = (value) =>
 {
   data.position = value;
+  
+  if (data.message == "")
+  {
+    data.message = " ";
+  }
   spawnNoteMessage(data);
   const scene = AFRAME.scenes[0];
   scene.emit("penButtonPressed");
