@@ -2,8 +2,10 @@ import React, { useEffect, useState } from "react";
 import className from "classnames";
 import PropTypes from "prop-types";
 import styles from "../../assets/stylesheets/moonfactory.scss";
-import avatar1 from "../../assets/avatars/avatar1.png"
-import avatar2 from "../../assets/avatars/avatar2.png"
+import avatar_kimura from "../../assets/avatars/avatar_kimura.png"
+import avatar_ken from "../../assets/avatars/avatar_ken.png"
+import avatar_lina from "../../assets/avatars/avatar_lina.png"
+import avatar_sakaguchi from "../../assets/avatars/avatar_sakaguchi.png"
 
 import { getMicrophonePresences } from "../../utils/microphone-presence";
 import { useRoomPermissions } from "./useRoomPermissions";
@@ -63,11 +65,24 @@ function getAvatar(id, name)
   var newname = name;
   switch (id)
   {
-    case "L9fFxRv":
-      avatar = avatar1;
+    case "Rttwy54":
+    case "vx0Se7t":
+      avatar = avatar_kimura;
+    break;
+    case "obLHbEx":
+    case "hGTjj99":
+      avatar = avatar_ken;
+    break;
+    case "crXHtoU":
+    case "aUuCG06":
+      avatar = avatar_lina;
+    break;
+    case "bxqrdB9":
+    case "Ud2Xvcy":
+      avatar = avatar_sakaguchi;
     break;
     default:
-      avatar = avatar2;
+      avatar = avatar_kimura;
     break;
   }
 
