@@ -3,6 +3,7 @@ import PropTypes from "prop-types";
 import classNames from "classnames";
 import styles from "./ToolbarButton.scss";
 
+//moonfactory追加
 export const presets = [
   "basic",
   "transparent",
@@ -12,7 +13,8 @@ export const presets = [
   "accent2",
   "accent3",
   "accent4",
-  "accent5"
+  "accent5",
+  "accent7"
 ];
 
 export const types = ["none", "left", "middle", "right"];

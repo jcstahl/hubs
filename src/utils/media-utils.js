@@ -375,7 +375,8 @@ export const cloneMedia = (sourceEl, template, src = null, networked = true, lin
     ({ src } = sourceEl.components["media-loader"].data);
   }
 
-  const { contentSubtype, fitToBox, mediaOptions } = sourceEl.components["media-loader"].data;
+  //moonfactory修正
+  const { isNote, contentSubtype, fitToBox, mediaOptions } = sourceEl.components["media-loader"].data;
 
   return addMedia(
     src,
