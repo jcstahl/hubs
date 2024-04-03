@@ -278,6 +278,22 @@ export class CameraSystem {
     this.mode = NEXT_MODES[this.mode] || 0;
   }
 
+  //moonfactory追加
+  setMode(cameraMode) {
+    if (cameraMode > CAMERA_MODE_THIRD_PERSON_VIEW || cameraMode < 0 || cameraMode == this.mode) return;
+    const vrMode = AFRAME.scenes[0].is("vr-mode") || AFRAME.utils.device.isMobileVR();
+    const mode = vrMode ? CAMERA_MODE_FIRST_PERSON : cameraMode; // do not change mode, if user is in VR mode
+
+    this.mode = mode;
+
+    if (this.mode == CAMERA_MODE_THIRD_PERSON_VIEW) {
+      this.viewingCamera.layers.disable(Layers.CAMERA_LAYER_FIRST_PERSON_ONLY);
+      this.viewingCamera.layers.enable(Layers.CAMERA_LAYER_THIRD_PERSON_ONLY);
+    } else {
+      this.viewingCamera.layers.disable(Layers.CAMERA_LAYER_THIRD_PERSON_ONLY);
+      this.viewingCamera.layers.enable(Layers.CAMERA_LAYER_FIRST_PERSON_ONLY);
+    }
+  }
   inspect(obj, distanceMod, fireChangeEvent = true) {
     this.verticalDelta = 0;
     this.horizontalDelta = 0;
@@ -453,7 +469,10 @@ export class CameraSystem {
       }
       if (!this.enteredScene && entered) {
         this.enteredScene = true;
-        this.mode = CAMERA_MODE_FIRST_PERSON;
+        //this.mode = CAMERA_MODE_FIRST_PERSON; //moonfactory編集
+		//moonfactory追加
+        const thirdPersonEnabled = window.APP.store.state.preferences.enableThirdPersonView;
+        this.setMode(thirdPersonEnabled ? CAMERA_MODE_THIRD_PERSON_VIEW : CAMERA_MODE_FIRST_PERSON);
       }
       this.avatarPOVRotator = this.avatarPOVRotator || this.avatarPOV.components["pitch-yaw-rotator"];
       this.viewingCameraRotator = this.viewingCameraRotator || this.viewingCamera.el.components["pitch-yaw-rotator"];
@@ -570,7 +589,7 @@ export class CameraSystem {
         }
       } else if (this.mode === CAMERA_MODE_THIRD_PERSON_VIEW) { //moonfactory追加
         this.viewingCameraRotator.on = false;
-        translation.makeTranslation(0, -.5, 1.5);
+        tmpMat.makeTranslation(0, -.5, 1.5);
         this.avatarRig.object3D.updateMatrices();
         setMatrixWorld(this.viewingRig.object3D, this.avatarRig.object3D.matrixWorld);
         if (scene.is("vr-mode")) {
@@ -578,7 +597,7 @@ export class CameraSystem {
           setMatrixWorld(this.avatarPOV.object3D, this.viewingCamera.matrixWorld);
         } else {
           this.avatarPOV.object3D.updateMatrices();
-          setMatrixWorld(this.viewingCamera, this.avatarPOV.object3D.matrixWorld.multiply(translation));
+          setMatrixWorld(this.viewingCamera, this.avatarPOV.object3D.matrixWorld.multiply(tmpMat));
         }
 
         this.avatarRig.object3D.updateMatrices();
