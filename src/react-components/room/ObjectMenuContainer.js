@@ -7,13 +7,16 @@ import {
   useRemoveObject,
   useGoToSelectedObject,
   getObjectUrl,
+  getNoteData, //moonfactory追加
   isPlayer,
   isMe,
+  isNote, //moonfactory追加
   useHideAvatar
 } from "./object-hooks";
 import { ReactComponent as PinIcon } from "../icons/Pin.svg";
 import { ReactComponent as LinkIcon } from "../icons/Link.svg";
 import { ReactComponent as GoToIcon } from "../icons/GoTo.svg";
+import { ReactComponent as EditIcon } from "../icons/Edit.svg"; //moonfactory追加
 import { ReactComponent as DeleteIcon } from "../icons/Delete.svg";
 import { ReactComponent as AvatarIcon } from "../icons/Avatar.svg";
 import { ReactComponent as HideIcon } from "../icons/Hide.svg";
@@ -58,7 +61,7 @@ PlayerMenuItems.propTypes = {
   deselectObject: PropTypes.func.isRequired
 };
 
-function ObjectMenuItems({ hubChannel, scene, activeObject, deselectObject, onGoToObject }) {
+function ObjectMenuItems({ hubChannel, scene, activeObject, deselectObject, onGoToObject, switchMenu }) { //moonfactory編集
   const { canPin, isPinned, togglePinned } = usePinObject(hubChannel, scene, activeObject);
   const { canRemoveObject, removeObject } = useRemoveObject(hubChannel, scene, activeObject);
   const { canGoTo, goToSelectedObject } = useGoToSelectedObject(scene, activeObject);
@@ -97,6 +100,20 @@ function ObjectMenuItems({ hubChannel, scene, activeObject, deselectObject, onGo
           <FormattedMessage id="object-menu.view-object-button" defaultMessage="View" />
         </span>
       </ObjectMenuButton>
+      {(isNote(activeObject) == "isNote") &&  //moonfactory追加
+      (<ObjectMenuButton
+        disabled={!canGoTo}
+        onClick={() => {
+          deselectObject();
+          switchMenu(getNoteData(activeObject, () => {removeObject();}));
+        }}
+      >
+        <EditIcon />
+        <span>
+          <FormattedMessage id="object-menu.edit-object-button" defaultMessage="編集" />
+        </span>
+      </ObjectMenuButton>)
+      }
       <ObjectMenuButton
         disabled={!canRemoveObject}
         onClick={() => {
@@ -141,6 +158,7 @@ export function ObjectMenuContainer({ hubChannel, scene, onOpenProfile, onGoToOb
         activeObject={activeObject}
         deselectObject={deselectObject}
         onGoToObject={onGoToObject}
+        switchMenu={switchMenu} //moonfactory追加
       />
     );
   }

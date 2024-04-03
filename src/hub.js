@@ -76,6 +76,8 @@ import "./components/hand-controls2";
 import "./components/hoverable-visuals";
 import "./components/hover-visuals";
 import "./components/offset-relative-to";
+import "./components/offset-global"; //moonfactory追加
+import "./components/offset-monitor"; //moonfactory追加
 import "./components/player-info";
 import "./components/name-tag";
 import "./components/debug";

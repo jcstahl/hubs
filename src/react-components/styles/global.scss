@@ -69,6 +69,11 @@
   --accent6-color-hover: #{theme.$black-hover};
   --accent6-color-pressed: #{theme.$black-pressed};
 
+  //moonfactory追加
+  --accent7-color: #{theme.$aqua};
+  --accent7-border-color: var(--accent7-color);
+  --accent7-color-hover: #{theme.$aqua-hover};
+  --accent7-color-pressed: #{theme.$aqua-pressed};
   --primary-color: #{theme.$blue};
   --primary-color-hover: #{theme.$blue-hover};
   --primary-color-pressed: #{theme.$blue-pressed};

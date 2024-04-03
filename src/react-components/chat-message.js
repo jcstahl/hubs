@@ -2,6 +2,7 @@ import React from "react";
 import { createRoot } from "react-dom/client";
 import PropTypes from "prop-types";
 import styles from "../assets/stylesheets/presence-log.scss";
+import mfstyles from "../assets/stylesheets/moonfactory.scss"; //moonfactory追加
 import classNames from "classnames";
 import html2canvas from "html2canvas";
 import { coerceToUrl } from "../utils/media-utils";
@@ -41,7 +42,39 @@ const messageBodyDom = (body, from, fromSessionId, onViewProfile, emojiClassName
   return { content, multiline, emoji };
 };
 
+//moonfactory追加
+const messageBodyDomNote = (body, from, fromSessionId, onViewProfile, emojiClassName) => {
+  const { formattedBody, multiline, monospace, emoji } = formatMessageBody(body, { emojiClassName });
+  const wrapStyle = multiline ? mfstyles.messageWrapMulti : mfstyles.messageWrap;
+  const messageBodyClasses = {
+    [mfstyles.messageBody]: true,
+    [mfstyles.messageBodyMulti]: multiline,
+    [mfstyles.messageBodyMono]: monospace
+  };
+  const includeClientLink = onViewProfile && fromSessionId && history && NAF.clientId !== fromSessionId;
+  const onFromClick = includeClientLink ? () => onViewProfile(fromSessionId) : () => {};
+
+  const content = (
+    <div className={wrapStyle}>
+      {from && (
+        <div
+          onClick={onFromClick}
+          className={classNames({ [mfstyles.messageSource]: true, [mfstyles.messageSourceLink]: includeClientLink })}
+        >
+          {from}:
+        </div>
+      )}
+      <div className={classNames(messageBodyClasses)}>{formattedBody}</div>
+    </div>
+  );
+
+  return { content, multiline, emoji };
+};
+
+
 const bubbleColorRegEx = RegExp("^.*\\n?(-color=)(#?[0-9a-fA-Z]{6}|[0-9a-fA-Z]{3})\\n?.*$", "m");
+
+//moonfactory追加 
 function renderChatMessage(body, from, allowEmojiRender) {
   const matches = body.match(bubbleColorRegEx);
   let bubbleColor;
@@ -93,6 +126,66 @@ function renderChatMessage(body, from, allowEmojiRender) {
         }}
       />
     );
+  });
+}
+
+//moonfactory追加
+function renderNote(data, from, allowEmojiRender) {
+  const matches = body.match(bubbleColorRegEx);
+  let bubbleColor;
+  if (matches) {
+    matches.shift();
+    bubbleColor = matches[1];
+    body = matches.reduce((acc, cur) => acc.replace(cur, ""), body);
+  }
+
+  const { content, emoji, multiline } = messageBodyDomNote(data.message, from, null, null, mfstyles.emoji);
+  const isEmoji = allowEmojiRender && emoji;
+  const el = document.createElement("div");
+  el.setAttribute("class", `${mfstyles.presenceLog} ${mfstyles.presenceLogSpawn}`);
+  document.body.appendChild(el);
+
+  const EntryDom = ({ callback }) => (
+
+    <div
+      ref={callback}
+      className={classNames({
+        [mfstyles.presenceLogEntry]: !isEmoji,
+        [mfstyles.presenceLogEntryOneLine]: !isEmoji && !multiline,
+        [mfstyles.presenceLogEmoji]: isEmoji
+      })}
+      style={bubbleColor && { backgroundColor: `${bubbleColor}` }}
+    >
+      <span>{content}</span>
+      <span className={mfstyles.noteTitle}>{data.title}</span>
+    </div>
+  );
+
+  EntryDom.propTypes = {
+    callback: PropTypes.func
+  };
+
+  return new Promise((resolve, reject) => {
+    const root = createRoot(el);
+    root.render(
+      <EntryDom
+        callback={() => {
+          const width = el.offsetWidth;
+          const height = el.offsetHeight;
+          const ratio = height / width;
+          const scale = 10; //moonfactory編集
+          //HTMLから付箋の画像を作る
+          html2canvas(el, { backgroundColor: data.color, scale, logging: false })
+            .then(canvas => {
+              canvas.toBlob(blob => resolve([blob, width, height]), "image/png");
+              el.remove();
+            })
+
+            .catch(reject);
+        }}
+      />
+    );
+
   });
 }
 
@@ -180,6 +273,26 @@ export async function spawnChatMessage(body, from) {
   document.querySelector("a-scene").emit("add_media", new File([blob], "message.png", { type: "image/png" }));
 }
 
+//moonfactory追加
+export async function spawnNoteMessage(data, from) {
+  if (data.message.length === 0) return;
+
+  try {
+    const url = new URL(coerceToUrl(data.message));
+    if (url.host) {
+      document.querySelector("a-scene").emit("add_media", data.message);
+      return;
+    }
+  } catch (e) {
+    // Ignore parse error
+  }
+
+  // If not a URL, spawn as a text bubble
+
+  const [blob] = await renderNote(data, from, true);
+  document.querySelector("a-scene").emit("add_note", {file: new File([blob], "message.png", { type: "image/png" }), data: data});
+}
+
 export default function ChatMessage(props) {
   const { content } = messageBodyDom(props.body, props.name, props.sessionId, props.onViewProfile);
 
@@ -200,6 +313,7 @@ ChatMessage.propTypes = {
   name: PropTypes.string,
   maySpawn: PropTypes.bool,
   body: PropTypes.string,
+  title: PropTypes.string, //moonfactory追加
   sessionId: PropTypes.string,
   className: PropTypes.string,
   onViewProfile: PropTypes.func

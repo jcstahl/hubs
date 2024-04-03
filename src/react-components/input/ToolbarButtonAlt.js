@@ -1,9 +1,8 @@
 import React, { forwardRef } from "react";
 import PropTypes from "prop-types";
 import classNames from "classnames";
-import styles from "./ToolbarButton.scss";
+import styles from "../../assets/stylesheets/moonfactory.scss";
 
-//moonfactory追加
 export const presets = [
   "basic",
   "transparent",
@@ -13,15 +12,14 @@ export const presets = [
   "accent2",
   "accent3",
   "accent4",
-  "accent5",
-  "accent7"
+  "accent5"
 ];
 
 export const types = ["none", "left", "middle", "right"];
 
 export const statusColors = ["recording", "unread", "enabled", "disabled"];
 
-export const ToolbarButton = forwardRef(
+export const ToolbarButtonAlt = forwardRef(
   (
     {
       preset,
@@ -36,7 +34,7 @@ export const ToolbarButton = forwardRef(
       statusColor,
       type,
       disabled,
-      onClick,
+      bgColor,
       ...rest
     },
     ref
@@ -53,11 +51,10 @@ export const ToolbarButton = forwardRef(
         )}
         disabled={disabled}
         title={title}
-        onClick={onClick}
         {...rest}
       >
         <div
-          className={classNames(styles.iconContainer, iconContainerClassName, "ButtonOverride")} //moonfactory編集
+          className={classNames("ToolbarButtonAlt", iconContainerClassName, "ButtonOverride", bgColor)}
           disabled={disabled}
           aria-hidden="true"
         >
@@ -71,7 +68,7 @@ export const ToolbarButton = forwardRef(
   }
 );
 
-ToolbarButton.propTypes = {
+ToolbarButtonAlt.propTypes = {
   icon: PropTypes.node,
   label: PropTypes.node,
   selected: PropTypes.bool,
@@ -83,13 +80,12 @@ ToolbarButton.propTypes = {
   type: PropTypes.oneOf(types),
   large: PropTypes.bool,
   disabled: PropTypes.bool,
-  title: PropTypes.node,
-  onClick: PropTypes.func
+  title: PropTypes.node
 };
 
-ToolbarButton.defaultProps = {
+ToolbarButtonAlt.defaultProps = {
   preset: "basic",
   disabled: false
 };
 
-ToolbarButton.displayName = "ToolbarButton";
+ToolbarButtonAlt.displayName = "ToolbarButtonAlt";

@@ -1,5 +1,10 @@
 @use "../styles/theme.scss";
 
+//moonfactory追加
+:root {
+  --sidebarfrom: 50%;
+  --sidebarto: 0%;
+}
 :local(.room-layout) {
   display: grid;
   width: 100%;
@@ -21,11 +26,20 @@
   grid-column-start: main;
 }
 
+//moonfactory編集
 :local(.sidebar) {
+  position: fixed;
+  top: 0;
+  bottom: 0;
+  right: 0;
+  z-index: 9;
   grid-column-start: sidebar;
-  height: 100%;
+  height: calc(100% - 96px);
   overflow: hidden;
   width: 450px;
+  animation: append-animate .3s linear;
+  --sidebarfrom: calc(100%);
+  --sidebarto: calc(100% - 450px);
 
   @media (max-width: theme.$breakpoint-lg - 1), (max-height: theme.$breakpoint-vr - 1) {
     position: fixed;
@@ -36,6 +50,8 @@
     margin: 0;
     width: 100%;
     z-index: 9;
+    --sidebarfrom: 100%;
+    --sidebarto: 0%;
   }
 }
 
@@ -51,6 +67,15 @@
   }
 }
 
+//moonfactory追加
+@keyframes append-animate {
+	from {
+		left: var(--sidebarfrom);
+	}
+	to {
+		left: var(--sidebarto);
+	}
+}
 :local(.toolbar) {
   grid-row-start: toolbar;
   grid-column-end: -1;
