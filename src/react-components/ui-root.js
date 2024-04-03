@@ -27,6 +27,7 @@ import { isIOS } from "../utils/is-mobile";
 
 import ProfileEntryPanel from "./profile-entry-panel";
 import MediaBrowserContainer from "./media-browser";
+import CategoryBrowserContainer from "./category-browser"; //moonfactory追加
 
 import EntryStartPanel from "./entry-start-panel.js";
 import AvatarEditor from "./avatar-editor";
@@ -51,7 +52,10 @@ import { MicSetupModalContainer } from "./room/MicSetupModalContainer";
 import { InvitePopoverContainer } from "./room/InvitePopoverContainer";
 import { MoreMenuPopoverButton, CompactMoreMenuButton, MoreMenuContextProvider } from "./room/MoreMenuPopover";
 import { ChatSidebarContainer } from "./room/ChatSidebarContainer";
-import { ContentMenu, PeopleMenuButton, ObjectsMenuButton, ECSDebugMenuButton } from "./room/ContentMenu";
+import { NoteSidebarContainer } from "./room/NoteSidebarContainer"; //moonfactory追加
+import { CreateCategoryContainer } from "./room/CreateCategoryContainer"; //moonfactory追加
+import { ContentMenu, PeopleMenuButton, ObjectsMenuButton, ViewMenuButton, ECSDebugMenuButton } from "./room/ContentMenu"; //
+import { AvatarMenu} from "./room/AvatarMenu"; //moonfactory追加
 import { ReactComponent as CameraIcon } from "./icons/Camera.svg";
 import { ReactComponent as AvatarIcon } from "./icons/Avatar.svg";
 import { ReactComponent as AddIcon } from "./icons/Add.svg";
@@ -77,6 +81,7 @@ import { ObjectsSidebarContainer } from "./room/ObjectsSidebarContainer";
 import { ObjectMenuContainer } from "./room/ObjectMenuContainer";
 import { useCssBreakpoints } from "react-use-css-breakpoints";
 import { PlacePopoverContainer } from "./room/PlacePopoverContainer";
+import { NotePopoverContainer } from "./room/NotePopoverContainer"; //moonfactory追加
 import { SharePopoverContainer } from "./room/SharePopoverContainer";
 import { AudioPopoverButtonContainer } from "./room/AudioPopoverButtonContainer";
 import { ReactionPopoverContainer } from "./room/ReactionPopoverContainer";
@@ -103,6 +108,8 @@ import { usePermissions } from "./room/hooks/usePermissions";
 import { ChatContextProvider } from "./room/contexts/ChatContext";
 import ChatToolbarButton from "./room/components/ChatToolbarButton/ChatToolbarButton";
 import SeePlansCTA from "./room/components/SeePlansCTA/SeePlansCTA";
+import { CAMERA_MODE_THIRD_PERSON_VIEW, CAMERA_MODE_FIRST_PERSON } from "../systems/camera-system"; //moonfactory追加
+import { SetDefaultNoteColor } from "./room/NoteSidebarContainer"; //moonfactory追加
 
 const avatarEditorDebug = qsTruthy("avatarEditorDebug");
 
@@ -210,6 +217,10 @@ class UIRoot extends Component {
     sidebarId: null,
     presenceCount: 0,
     chatPrefix: "",
+    newNote: false, //moonfactory追加
+    noteTitle: "", //moonfactory追加
+    noteData: {}, //moonfactory追加
+    showCategoryBrowser: false, //moonfactory追加
     chatAutofocus: false
   };
 
@@ -404,6 +415,10 @@ class UIRoot extends Component {
     scene.addEventListener("action_media_tweet", this.onTweet);
   }
 
+  //export async function 
+  addCategory(body) {
+    console.log("addCategory "+body);
+  }
   UNSAFE_componentWillMount() {
     this.props.store.addEventListener("statechanged", this.storeUpdated);
   }
@@ -778,6 +793,58 @@ class UIRoot extends Component {
     this.setState({ sidebarId, chatPrefix: "", chatAutofocus: false, selectedUserId: null, ...(otherState || {}) });
   }
 
+  //moonfactory追加
+  //カテゴリー一覧を表示する
+  showCategories() {
+    this.setState({ showCategoryBrowser: true });
+  }
+
+  //moonfactory追加
+  //カテゴリー一覧を隠す
+  hideCategories() {
+    this.setState({ showCategoryBrowser: false });
+  }
+
+  //moonfactory追加
+  //付箋を編集する為にデータを設定する
+  editNote(data) {
+    this.setState({ noteTitle: data.title});
+    this.setState({ noteData: data});
+    this.toggleSidebarNote("note", {createNewNote: false});
+  }
+
+  //moonfactory追加
+  //付箋作成のサイドバーを表示
+  toggleSidebarNote(sidebarId, otherState) {
+    this.setState({ newNote: otherState.createNewNote});
+    this.toggleSidebar(sidebarId, otherState);
+  }
+
+  //moonfactory追加
+  //視線の切り替え
+  toggleView()
+  {
+    this.props.store.state.preferences.enableThirdPersonView = !this.props.store.state.preferences.enableThirdPersonView;
+    this.props.scene.systems["hubs-systems"].cameraSystem.setMode(
+      this.props.store.state.preferences.enableThirdPersonView ? CAMERA_MODE_THIRD_PERSON_VIEW : CAMERA_MODE_FIRST_PERSON
+    );
+  }
+
+  //moonfactory追加
+  //入室時の色設定
+  joinedRoom()
+  {
+    if (this.occupantCount() <= 4)
+    {
+      SetDefaultNoteColor(this.occupantCount());
+    }
+    else
+    {
+      SetDefaultNoteColor(4);
+    }
+    //this.el.setAttribute("roomCount", { roomCount: 0 });
+  }
+
   toggleSidebar(sidebarId, otherState) {
     this.setState(({ sidebarId: curSidebarId }) => {
       const nextSidebarId = curSidebarId === sidebarId ? null : sidebarId;
@@ -929,6 +996,14 @@ class UIRoot extends Component {
   };
 
   isInModalOrOverlay = () => {
+
+	//moonfactory追加
+	//カテゴリー一覧の為のコード
+    if (this.state.showCategoryBrowser)
+    {
+      return true;
+    }
+
     if (
       this.state.entered &&
       (IN_ROOM_MODAL_ROUTER_PATHS.find(x => sluglessPath(this.props.history.location).startsWith(x)) ||
@@ -1044,6 +1119,7 @@ class UIRoot extends Component {
 
     if (this.props.showInterstitialPrompt) return this.renderInterstitialPrompt();
 
+    //May come in handy for waiting room implementation
     const entered = this.state.entered;
     const watching = this.state.watching;
     const enteredOrWatching = entered || watching;
@@ -1377,6 +1453,28 @@ class UIRoot extends Component {
                 )}
               />
             )}
+            {this.state.showCategoryBrowser && ( //moonfactory追加
+              <CategoryBrowserContainer
+                history={this.props.history}
+                mediaSearchStore={this.props.mediaSearchStore}
+                hubChannel={this.props.hubChannel}
+                onMediaSearchResultEntrySelected={(entry, selectAction) => {
+                  if (entry.type === "room") {
+                    this.showNonHistoriedDialog(LeaveRoomModal, {
+                      destinationUrl: entry.url,
+                      reason: LeaveReason.joinRoom
+                    });
+                  } else {
+                    this.props.onMediaSearchResultEntrySelected(entry, selectAction);
+                  }
+                }}
+                performConditionalSignIn={this.props.performConditionalSignIn}
+                showNonHistoriedDialog={this.showNonHistoriedDialog}
+                store={this.props.store}
+                scene={this.props.scene}
+                hideBrowser={() => this.hideCategories()}
+              />
+            )}
             {!this.state.dialog && showMediaBrowser && (
               <MediaBrowserContainer
                 history={this.props.history}
@@ -1411,6 +1509,17 @@ class UIRoot extends Component {
                     {(!this.props.selectedObject ||
                       (this.props.breakpoint !== "sm" && this.props.breakpoint !== "md")) && (
                       <ContentMenu>
+                        {entered && ( //moonfactory追加
+                          <ViewMenuButton
+                          //onClick={() => this.toggleView()}
+                          onClick={() => this.toggleView()}
+                        />
+                        )}
+                        {entered && false && (
+                          <ViewMenuButton
+                          onClick={() => Pose()}
+                        />
+                        )}
                         {showObjectList && (
                           <ObjectsMenuButton
                             active={this.state.sidebarId === "objects"}
@@ -1431,6 +1540,14 @@ class UIRoot extends Component {
                         )}
                       </ContentMenu>
                     )}
+                    {(!this.props.selectedObject ||
+                      (this.props.breakpoint !== "sm" && this.props.breakpoint !== "md")) && entered &&  ( //moonfactory追加
+                      <AvatarMenu
+                        presences={this.props.presences}
+                        mySessionId={this.props.sessionId}
+                      >
+                      </AvatarMenu>
+                    )}
                     {!entered && !streaming && !isMobile && streamerName && <SpectatingLabel name={streamerName} />}
                     {this.props.activeObject && (
                       <ObjectMenuContainer
@@ -1442,6 +1559,7 @@ class UIRoot extends Component {
                             this.setSidebar(null);
                           }
                         }}
+                        switchMenu={value => this.editNote(value)} //moonfactory追加
                       />
                     )}
                     {this.state.sidebarId !== "chat" && this.props.hub && (
@@ -1505,6 +1623,25 @@ class UIRoot extends Component {
                           onClose={() => this.setSidebar(null)}
                           autoFocus={this.state.chatAutofocus}
                           initialValue={this.state.chatPrefix}
+                        />
+                      )}
+                      {this.state.sidebarId === "note" && ( //moonfactory追加
+                        <NoteSidebarContainer
+                        onClose={() => this.setSidebar(null)}
+                        deleteOld={() => this.state.noteData.delete()}
+                        scene={this.props.scene}
+                        newNote={this.state.newNote}
+                        noteData={this.state.noteData}
+                        togglePen={() => this.props.scene.emit("penButtonPressed")}
+                        />
+                      )}
+                      {this.state.sidebarId === "newCate" && ( //moonfactory追加
+                        <CreateCategoryContainer
+                        onClose={() => this.setSidebar(null)}
+                        scene={this.props.scene}
+                        titleValue={""}
+                        categoryValue={""}
+                        messageValue={""} //can use when editing
                         />
                       )}
                       {this.state.sidebarId === "objects" && (
@@ -1643,6 +1780,16 @@ class UIRoot extends Component {
                             initialPresence={getPresenceProfileForSession(this.props.presences, this.props.sessionId)}
                           />
                         )}
+                        <NotePopoverContainer //moonfactory追加
+                          scene={this.props.scene}
+                          hubChannel={this.props.hubChannel}
+                          mediaSearchStore={this.props.mediaSearchStore}
+                          showNonHistoriedDialog={this.showNonHistoriedDialog}
+                          createNote={() => this.toggleSidebarNote("note", { createNewNote: true})}
+                          newCate={() => this.toggleSidebar("newCate")}
+                          viewCate={() => this.showCategories()}
+                          //viewCate={() => this.toggleSidebar("viewCate")}
+                        />
                       </>
                     )}
                     {!isLockedDownDemo && (

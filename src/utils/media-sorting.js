@@ -61,3 +61,33 @@ export function getMediaTypeAframe(el) {
   const order = mediaSortOrderAframe(el);
   return SORT_ORDER_TO_TYPE[order];
 }
+
+//moonfactory追加
+//HTML elementから付箋かどうかのboolを取る
+export function getIsNote(el) {
+  return el.dataset.isnote;
+}
+
+//moonfactory追加
+//HTML elementから付箋の内容を取る
+export function getMessage(el) {
+  return el.dataset.message;
+}
+
+//moonfactory追加
+//HTML elementから付箋のカテゴリーを取る
+export function getCategory(el) {
+  return el.dataset.category;
+}
+
+//moonfactory追加
+//HTML elementから付箋のタイトルを取る
+export function getTitle(el) {
+  return el.dataset.title;
+}
+
+//moonfactory追加
+//HTML elementから付箋の色を取る
+export function getColor(el) {
+  return el.dataset.color;
+}

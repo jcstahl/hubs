@@ -1,6 +1,6 @@
 import React, { useState, useEffect, useContext, createContext, useCallback, Children, cloneElement } from "react";
 import PropTypes from "prop-types";
-import { mediaSort, mediaSortAframe, getMediaType, getMediaTypeAframe } from "../../../utils/media-sorting.js";
+import { mediaSort, mediaSortAframe, getMediaType, getMediaTypeAframe, getIsNote, getMessage, getCategory, getTitle, getColor } from "../../../utils/media-sorting.js"; //moonfactory編集
 import { anyEntityWith, shouldUseNewLoader } from "../../../utils/bit-utils";
 import { addComponent, defineQuery, hasComponent, removeComponent } from "bitecs";
 import { Inspected, MediaInfo } from "../../../bit-components.js";
@@ -127,6 +127,11 @@ export function ObjectListProvider({ scene, children }) {
           id: el.object3D.id,
           name: getDisplayString(getUrlAframe(el)),
           type: getMediaTypeAframe(el),
+        isNote: getIsNote(el), //moonfactory追加
+        message: getMessage(el), //moonfactory追加
+        category: getCategory(el), //moonfactory追加
+        title: getTitle(el), //moonfactory追加
+        color: getColor(el), //moonfactory追加
           eid: el.eid,
           el
         }));

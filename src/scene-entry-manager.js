@@ -11,7 +11,7 @@ const isMobileVR = AFRAME.utils.device.isMobileVR();
 const isDebug = qsTruthy("debug");
 const qs = new URLSearchParams(location.search);
 
-import { addMedia } from "./utils/media-utils";
+import { addMedia, addNote } from "./utils/media-utils"; //moonfactory追加
 import {
   isIn2DInterstitial,
   handleExitTo2DInterstitial,
@@ -227,6 +227,7 @@ export default class SceneEntryManager {
       const offset = { x: 0, y: 0, z: -1.5 };
       const { entity, orientation } = addMedia(
         src,
+		"notNote", //moonfactory追加
         "#interactable-media",
         contentOrigin,
         null,
@@ -249,6 +250,7 @@ export default class SceneEntryManager {
         console.warn(
           "Spawning newLoader object using `spawnMediaInFrontOfPlayer`. This codepath should likely be made more direct.",
           src,
+		  "notNote", //moonfactory追加
           contentOrigin
         );
         if (typeof src === "string") {
@@ -261,12 +263,85 @@ export default class SceneEntryManager {
       }
     };
 
+	//moonfactory追加
+    //モニターの生成
+    const spawnScreen = (src, contentOrigin) => {
+      if (!this.hubChannel.can("spawn_and_move_media")) return;
+      const offset = { x: 0, y: 0, z: -1.5 };
+      const { entity, orientation } = addMedia(
+        src,
+        "notNote",
+        "#interactable-media",
+        contentOrigin,
+
+
+
+
+
+
+
+
+
+        null,
+        !(src instanceof MediaStream),
+        true
+      );
+      orientation.then(or => {
+        entity.setAttribute("offset-monitor", {
+          target: "#avatar-pov-node",
+          //pos: { x: -2.2050517097473145, y: 1.9403883752822876  , z: 1.0710729934692383}, //生成の位置
+          pos: { x: 3.8883345127105713, y: 2.3396125411987305, z: 0.98992228507995}, //生成の位置
+          offset: { x: 0, y: 0, z: 0.05}, 
+          //rotation: new THREE.Euler(0, 2.255, 0),　//生成の回転
+          rotation: new THREE.Euler(0, THREE.MathUtils.degToRad(120), 0),　//生成の回転
+          orientation: or
+        });
+      });
+
+      return entity;
+    };
+
+    //moonfactory追加
+    //付箋の生成
+    const spawnNote = (src, contentOrigin, data) => {
+      if (!this.hubChannel.can("spawn_and_move_media")) return;
+      const offset = { x: 0, y: 0, z: -1.5 };
+      const { entity, orientation } = addNote(
+        src,
+        "isNote",
+        data.message,
+        data.category,
+        data.title,
+        data.color,
+        "#interactable-media",
+        contentOrigin,
+        null,
+        !(src instanceof MediaStream),
+        true
+      );
+
+      orientation.then(or => {
+        entity.setAttribute("offset-global", {
+          target: "#avatar-pov-node",
+          pos: data.position, //set to spawn position
+          offset: { x: 0, y: 0, z: 0.1},
+          rotation: data.rotation,
+          orientation: or
+        });
+      });
+      
+      return entity;
+    };
     this.scene.addEventListener("add_media", e => {
       const contentOrigin = e.detail instanceof File ? ObjectContentOrigins.FILE : ObjectContentOrigins.URL;
 
       spawnMediaInfrontOfPlayer(e.detail, contentOrigin);
     });
 
+	this.scene.addEventListener("add_note", e => {
+      const contentOrigin = e.detail.file instanceof File ? ObjectContentOrigins.FILE : ObjectContentOrigins.URL;
+      spawnNote(e.detail.file, contentOrigin, e.detail.data);
+    });
     this.scene.addEventListener("object_spawned", e => {
       this.hubChannel.sendObjectSpawnedEvent(e.detail.objectType);
     });
@@ -366,7 +441,7 @@ export default class SceneEntryManager {
         if (target === "avatar") {
           this.avatarRig.setAttribute("player-info", { isSharingAvatarCamera: true });
         } else {
-          currentVideoShareEntity = spawnMediaInfrontOfPlayerAndReturn(this.mediaDevicesManager.mediaStream, undefined);
+          currentVideoShareEntity = spawnScreen(this.mediaDevicesManager.mediaStream, undefined); //moonfactory編集
           // Wire up custom removal event which will stop the stream.
           if (currentVideoShareEntity) {
             currentVideoShareEntity.setAttribute(

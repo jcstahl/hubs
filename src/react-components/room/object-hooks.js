@@ -11,6 +11,18 @@ import { AEntity, LocalAvatar, MediaInfo, RemoteAvatar, Static, MediaLoader } fr
 import { setPinned, canPin as canPinObject } from "../../utils/bit-pinning-helper";
 import { debounce } from "lodash";
 
+//moonfactory追加
+//オブジェクトが付箋かどうかを確認する為
+export function isNote(object) {
+  return object.el.dataset.isnote;
+}
+
+//moonfactory追加
+//付箋のデータを返す
+export function getNoteData(object, secondary) {
+  return {position: object.el.object3D.position, rotation: object.el.object3D.rotation, message: object.el.dataset.message, category: object.el.dataset.category, title: object.el.dataset.title, color: object.el.dataset.color, delete: secondary};
+}
+
 export function isMe(object) {
   if (shouldUseNewLoader()) {
     return hasComponent(APP.world, LocalAvatar, object.eid);

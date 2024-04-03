@@ -5,6 +5,7 @@ import { joinChildren } from "../misc/joinChildren";
 import styles from "./ContentMenu.scss";
 import { ReactComponent as ObjectsIcon } from "../icons/Objects.svg";
 import { ReactComponent as PeopleIcon } from "../icons/People.svg";
+import { ReactComponent as ViewIcon } from "../icons/View.svg"; //moonfactory追加
 import { FormattedMessage } from "react-intl";
 
 export function ContentMenuButton({ active, disabled, children, ...props }) {
@@ -41,6 +42,19 @@ export function ObjectsMenuButton(props) {
       <ObjectsIcon />
       <span>
         <FormattedMessage id="content-menu.objects-menu-button" defaultMessage="Objects" />
+      </span>
+    </ContentMenuButton>
+  );
+}
+
+//moonfactory追加
+//視線切り替えのボタン
+export function ViewMenuButton(props) {
+  return (
+    <ContentMenuButton {...props}>
+      <ViewIcon />
+      <span>
+        <FormattedMessage id="content-menu.view-menu-button" defaultMessage="視線" />
       </span>
     </ContentMenuButton>
   );
