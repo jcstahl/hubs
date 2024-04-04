@@ -138,7 +138,7 @@ ObjectMenuItems.propTypes = {
   onGoToObject: PropTypes.func.isRequired
 };
 
-export function ObjectMenuContainer({ hubChannel, scene, onOpenProfile, onGoToObject }) {
+export function ObjectMenuContainer({ hubChannel, scene, onOpenProfile, onGoToObject, switchMenu }) { //moonfactory編集
   const { objects, activeObject, deselectObject, selectNextObject, selectPrevObject, toggleLights, lightsEnabled } =
     useObjectList();
 
