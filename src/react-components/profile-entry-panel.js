@@ -27,6 +27,7 @@ export default class ProfileEntryPanel extends Component {
 
   state = {
     avatarId: null,
+    avatarName: null,
     displayName: null,
     avatar: null,
     pronouns: null
@@ -65,11 +66,13 @@ export default class ProfileEntryPanel extends Component {
       profile: {
         displayName: this.state.displayName,
         avatarId: this.state.avatarId,
+        avatarName: this.state.avatar.name,
         pronouns: this.state.pronouns
       }
     });
     this.props.finished();
     this.scene.emit("avatar_updated");
+    
   };
 
   stopPropagation = e => {

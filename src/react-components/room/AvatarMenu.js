@@ -6,6 +6,7 @@ import avatar_kimura from "../../assets/avatars/avatar_kimura.png"
 import avatar_ken from "../../assets/avatars/avatar_ken.png"
 import avatar_lina from "../../assets/avatars/avatar_lina.png"
 import avatar_sakaguchi from "../../assets/avatars/avatar_sakaguchi.png"
+import avatar_other from "../../assets/avatars/avatar_other.png"
 
 import { getMicrophonePresences } from "../../utils/microphone-presence";
 import { useRoomPermissions } from "./hooks/useRoomPermissions";
@@ -59,36 +60,32 @@ function getPersonName(person) {
 }
 
 //アバターの画像を返す
-function getAvatar(id, name)
+function getAvatar(avatarName, displayName)
 {
   var avatar;
-  var newname = name;
-  switch (id)
+  var newname = displayName;
+  switch (avatarName)
   {
-    case "Rttwy54":
-    case "vx0Se7t":
+    case "Kimura":
       avatar = avatar_kimura;
     break;
-    case "obLHbEx":
-    case "hGTjj99":
+    case "Ken":
       avatar = avatar_ken;
     break;
-    case "crXHtoU":
-    case "aUuCG06":
+    case "Lina":
       avatar = avatar_lina;
     break;
-    case "bxqrdB9":
-    case "Ud2Xvcy":
+    case "Sakaguchi":
       avatar = avatar_sakaguchi;
     break;
     default:
-      avatar = avatar_kimura;
+      avatar = avatar_other;
     break;
   }
 
-  if (name.length > 6)
+  if (displayName.length > 6)
   {
-    newname = name.substring(0,6)+"...";
+    newname = displayName.substring(0,6)+"...";
   }
 
   return (
@@ -105,8 +102,10 @@ export function AvatarMenu({presences, mySessionId}) {
     <div className={styles.avatarMenu}>
       {people.map(person => {
           return (
-            <div className={styles.avatarContainer}>
-              {getAvatar(person.profile.avatarId, getPersonName(person))}
+            <div key={person.profile}>
+              <div className={styles.avatarContainer}>
+                {getAvatar(person.profile.avatarName, getPersonName(person))}
+              </div>
             </div>
           );
         })}
