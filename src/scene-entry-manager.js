@@ -441,7 +441,14 @@ export default class SceneEntryManager {
         if (target === "avatar") {
           this.avatarRig.setAttribute("player-info", { isSharingAvatarCamera: true });
         } else {
-          currentVideoShareEntity = spawnScreen(this.mediaDevicesManager.mediaStream, undefined); //moonfactory編集
+          if (isDisplayMedia) //moonfactory編集
+          {
+            currentVideoShareEntity = spawnScreen(this.mediaDevicesManager.mediaStream, undefined); 
+          }
+          else
+          {
+            currentVideoShareEntity = spawnMediaInfrontOfPlayerAndReturn(this.mediaDevicesManager.mediaStream, undefined);
+          }
           // Wire up custom removal event which will stop the stream.
           if (currentVideoShareEntity) {
             currentVideoShareEntity.setAttribute(
